@@ -1,0 +1,13 @@
+﻿@model List<KetnoiCSDL.EF.ProductCategory>
+
+    <select class="select_option" name="select" id="categori2">
+        @foreach (var item in Model)
+        {
+        <option selected value="1">
+            <a href="/san-pham/@item.MetaTitle-@item.ID">@item.Name </a>
+        </option>
+
+            }
+    
+    </select>
+

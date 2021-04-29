@@ -1,0 +1,273 @@
+﻿
+@{
+    ViewBag.Title = "Chart";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    string thang = ""; // lưu trữ id của các tháng trong bảng
+    int idloai = 0; //lưu trự id của các loại trong bảng
+    int dem = 0; // đếm số lượng loại sản phẩm được bán ra
+    var db = new KetnoiCSDL.EF.BunyStoreDbContext(); // khai bao database
+    var listtype = db.ProductCategories.ToList(); // lấy danh sách tất cả các loại trong bảng
+    var listproduct = db.Products.ToList(); // lấy danh sách tất cả các loại trong bảng
+
+    int demtongSLmua = 0; // biến đếm tổng số lượng đã mua của tát cả các loại
+
+    //dùng vòng for để đềm số lượng tổng mua của tất cả các loại
+    foreach (var item in listproduct)
+    {
+        if (item.BoughtCount != null)
+        {
+            demtongSLmua += int.Parse(item.BoughtCount.ToString());
+        }
+        else
+        {
+            demtongSLmua += 0;
+        }
+
+    }
+
+    int tongNam = 0; // tổng số tiền trong năm
+                     //dùng vòng for để đếm tổng số tiền đã có được trong năm
+    for (int i = 1; i <= 12; i++)
+    {
+        thang = "TH" + i.ToString();
+        if(ViewData[thang] != null)
+        {
+            ViewBag.MotThang = ViewData[thang];
+        }
+        else
+        {
+            ViewBag.MotThang = 0;
+        }
+        tongNam += ViewBag.MotThang;
+    }
+}
+
+<style>
+    table td {
+        padding: 5px;
+    }
+</style>
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <h1 style="color:blue" class="h3 mb-2 text-gray-800">Các bảng và biểu đồ thống kê</h1>
+    <hr />
+    <!-- Content Row -->
+    <div class="row">
+        <div>
+            <!-- Area Chart -->
+            <h4>Bảng thống kê theo từng tháng</h4>
+            <table border="1" style="padding=5px 10px">
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>Số tiền trong tháng</td>
+                        <td>Tỉ lệ(%)</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        thang = "TH" + i.ToString();
+                        ViewBag.tongThang = ViewData[thang];
+                        float trungbinh = 0;
+                        if(ViewBag.tongThang != null)
+                        {
+                            decimal tongThang = ViewBag.tongThang;
+                            trungbinh = float.Parse(tongThang.ToString()) / float.Parse(tongNam.ToString()); //tinh1 sai
+                        }
+                        else
+                        {
+                            trungbinh = 0;
+                        }
+                        <tr>
+                            <td>Tháng @i</td>
+                            <td id="@thang">
+                                @ViewData[thang]
+                            </td>
+                            <td id="TiLe_@thang">@Math.Round(Convert.ToDecimal((trungbinh * 100).ToString()), 2)</td>
+                        </tr>
+                        var c = ViewData[thang];
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <!-- Area Chart -->
+            <h4>Biểu đồ khu vực thể hiện doanh thu tháng</h4>
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="myAreaChart"></canvas>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+        </div>
+
+
+        <div>
+            <!-- Area Chart -->
+            <h4>Bảng thống kê doanh thu của các loại</h4>
+            <table border="1" style="padding=5px 10px" id="TableProductType">
+                <thead>
+                    <tr>
+                        <td>Tên loại</td>
+                        <td>Số lượng</td>
+                        <td>Tỉ lệ(%)</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var productCategory in listtype)
+                    {
+                        idloai += 1;
+                        float trungbinh = 0;
+                        <tr>
+                            <td id="TenLoai_@idloai">@productCategory.Name</td>
+                            @foreach (var product in listproduct)
+                            {
+                                if (product.CategoryID == productCategory.ID)
+                                {
+                                    //Vì trong database có trường hợp null nên phải thêm 1 điều kiện
+                                    if (product.BoughtCount == null)
+                                    {
+                                        dem += 0;
+                                    }
+                                    else
+                                    {
+                                        dem += int.Parse(product.BoughtCount.ToString()); //cập nhật số lượng mua của sản phẩm có mã loại sản phẩm giống với mã loại sản phẩm của hàng
+                                    }
+                                }
+                                trungbinh = float.Parse(dem.ToString()) / float.Parse(demtongSLmua.ToString());
+                            }
+                            <td id="SL_Loai_@idloai">@dem</td>
+                            <td id="PhanTram_@idloai">@Math.Round(Convert.ToDecimal((trungbinh * 100).ToString()), 2)</td>
+                        </tr>
+                        dem = 0; // hết 1 loại cập nhật lại bộ đếm
+                        trungbinh = 0;
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <!-- Pie Chart -->
+            <h4>Biểu đồ tròn thể hiện loại món được lựa chọn nhiều trong năm (tên sản phẩm, số lượng mua)</h4>
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <div class="chart-area row">
+                        <div class="col-md-3 col-sm-5 col-xs-7">
+                            <canvas width="300" height="300" id="myPieChart"></canvas>
+                        </div>
+                        <div class="col-md-3">
+                            <table border="1" id="bangchuthich">
+                                <tbody id="chuthich">
+                                    <tr>
+                                        <td></td>
+                                        <td>Tên loại</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Chart{
+
+    @*Phần add file cho Chart*@
+
+    <!-- Page level plugins -->
+    <script src="~/assets/admin/jschart/vendor/chart.js/Chart.min.js"></script>
+    <!-- Page level custom scripts -->
+    <script src="~/assets/admin/jschart/demo/chart-area-demo.js"></script>
+    <script src="~/assets/admin/jschart/demo/chart-bar-demo.js"></script>
+    @*<script src="~/assets/admin/jschart/demo/chart-pie-demo.js"></script>*@
+
+    @*Pie chart*@
+    <script>
+        //Phân khai báo các thuộc tính sẽ dùng
+        var soluonghang = $("#TableProductType tr").length; // số lượng hàng trong bảng
+        var arrayName = []; // dữ liệu tên
+        var arrayCount = []; // dữ liệu số lượng
+        var arrayAvr = []; // dữ liệu số lượng
+        for (var i = 1; i <= soluonghang; i++) {
+            // khởi tạo id thành 1 chuỗi hoàn chỉnh
+            var a = "#TenLoai_" + i.toString(); // lấy ra giá trị tên
+            var b = "#SL_Loai_" + i.toString(); // lấy ra giá trị số lượng
+            var c = "#PhanTram_" + i.toString(); // lấy ra giá trị tỉ lệ (Hiện tại không sử dụng)
+
+            // lấy giá trị từ 3 id đã khởi tạo
+            var d = $(a).text();// gán vào biến để dễ dàng kiểm tra giá trị tên
+            var e = $(b).text();// gán vào biến để dễ dàng kiểm tra giá trị số lượng
+            var f = $(c).text();// gán vào biến để dễ dàng kiểm tra giá trị tỉ lệ (Hiện tại không sử dụng)
+            arrayName.push(d);
+            arrayCount.push(e);
+            arrayAvr.push(f); //(Hiện tại không sử dụng)
+        }
+
+        // Set new default font family and font color to mimic Bootstrap's default styling
+        Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+        Chart.defaults.global.defaultFontColor = '#858796';
+
+        // Pie Chart Example
+        var ctx = document.getElementById("myPieChart");
+        var myPieChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: arrayName,
+                datasets: [{
+                    data: arrayCount,
+                    //sẽ cho phép người dùng chọn tối đa 15 loại
+
+                    //Bảng màu RBG gốc (5,37 45, 62, 72, 80, hotprink3, 100 )
+                    backgroundColor: ['#E54646', '#FCF54C', '#83C75D', '#6EC3C9', '#BFCAE6', '#635BA2', '#EE6AA7', '#B7B7B7'],
+
+                    //Bảng màu RBG sau khi đưa chuột vào (4, 36, 44, 61, 69, 77, hotprink1, 104) //
+                    hoverBackgroundColor: ['#DF0029', '#F9F400', '#5BBD2B', '#00B2BF', '#426EB4', '#511F90', '#FF69B4', '#555555'],
+                    hoverBorderColor: "rgba(234, 236, 244, 255, 155, 1)", // phần màu khung được in đậm để làm rõ phần được chọn
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                tooltips: {
+                    backgroundColor: "rgb(255,255,255)",
+                    bodyFontColor: "#858796",
+                    borderColor: '#dddfeb',
+                    borderWidth: 1,
+                    xPadding: 15,
+                    yPadding: 15,
+                    displayColors: false,
+                    caretPadding: 10,
+                },
+                legend: {
+                    display: false
+                },
+                cutoutPercentage: 80,
+            },
+        });
+
+        var table = document.getElementById('chuthich');
+        var backgroundColor = ['#E54646', '#FCF54C', '#83C75D', '#6EC3C9', '#BFCAE6', '#635BA2', '#EE6AA7', '#B7B7B7']
+
+        for (var i = 0; i < arrayName.length - 1; i++) {
+            if (arrayCount[i].valueOf() != '0') {
+                var tr = document.createElement('tr');
+                var td1 = document.createElement('td');
+                td1.style.backgroundColor = backgroundColor[i].valueOf();
+                td1.style.width = '15px';
+                td1.style.height = '5px';
+                var td2 = document.createElement('td');
+                td2.style.fontSize = '7px'
+                td2.innerText = arrayName[i].valueOf();
+                table.appendChild(tr);
+                tr.appendChild(td1);
+                tr.appendChild(td2);
+            }
+        }
+    </script>
+}

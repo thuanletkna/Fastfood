@@ -1,0 +1,117 @@
+﻿@model KetnoiCSDL.EF.Contact
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section jsFooter
+    {
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
+    <script src="/assets/client/js/Controllers/ContactController.js"></script>
+
+    <script>
+
+            // This example displays a marker at the center of Australia.
+            // When the user clicks the marker, an info window opens.
+            //21.046300, 105.793266
+            function initMap() {
+                var uluru = { lat: 10.801870, lng: 106.714491 };
+                var map = new google.maps.Map(document.getElementById('mapCanvas'), {
+                    zoom: 18,
+                    center: uluru
+                });
+
+                var contentString = '@Html.Raw(Model.Content)';
+
+                var infowindow = new google.maps.InfoWindow({
+                    content: contentString
+                });
+
+                var marker = new google.maps.Marker({
+                    position: uluru,
+                    map: map,
+                    title: 'Địa chỉ'
+                });
+                marker.addListener('click', function () {
+                    infowindow.open(map, marker);
+                });
+            }
+            google.maps.event.addDomListener(window, 'load', initMap);
+    </script>
+}
+
+<div class="checkout_page_bg">
+    <div class="container">
+        <div class="Checkout_section">
+            <div class="checkout_form">
+                <div id="googleMap">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.125052042562!2d106.7123030152604!3d10.80173316167866!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317528a459cb43ab%3A0x6c3d29d370b52a7e!2zVHLGsOG7nW5nIMSQ4bqhaSBI4buNYyBDw7RuZyBOZ2jhu4cgVFAuSENNIC0gSFVURUNI!5e0!3m2!1svi!2s!4v1618459485963!5m2!1svi!2s" width="1400" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!--contact map end-->
+        <div class="container">
+            <!--contact area start-->
+            <div class="contact_area">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="contact_message content">
+                            <h3>CONTACT</h3>
+                            <p>Hãy liên hệ ngay với chúng tôi</p>
+                            <ul>
+                                <li><i class="fa fa-fax"></i> @Html.Raw(Model.Content)</li>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12">
+                        <div class="contact_message form">
+                            <h3>Tell us your project</h3>
+
+                            <form id="contact-form">
+                                @using (Html.BeginForm("Index", "Contact", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    if (ViewBag.SuccessMsg != null)
+                                    {
+                                        <br />
+                                        <div class="alert alert-success" role="alert">
+                                            <strong>Chúc mừng bạn! </strong> gửi phản hồi thành công.
+                                            <br />Chúng tôi sẽ liên hệ lại sớm nhất có thể.
+                                        </div>
+                                    }
+                                    <p>
+                                        @Html.TextBox("Name", "", new { @placeholder = "Họ tên" })
+                                        @Html.ValidationMessage("Name", "", new { @class = "text-danger" })
+                                    </p>
+                                    <p>
+                                        @Html.TextBox("Phone", "", new { @placeholder = "Số điện thoại" })
+                                        @Html.ValidationMessage("Phone", "", new { @class = "text-danger" })
+                                    </p>
+                                    <p>
+                                        @Html.TextBox("Address", "", new { @placeholder = "Địa chỉ" })
+                                        @Html.ValidationMessage("Address", "", new { @class = "text-danger" })
+                                    </p>
+                                    <p>
+                                        @Html.TextBox("Email", "", new { @placeholder = "Email" })
+                                        @Html.ValidationMessage("Email", "", new { @class = "text-danger" })
+                                    </p>
+
+                                    <div class="contact_textarea">
+                                        @Html.TextArea("Content", "", new { @placeholder = "Thông tin cần phản hồi" })
+                                        @Html.ValidationMessage("Content", "", new { @class = "text-danger" })
+                                    </div>
+                                    <button id="btnSend" class="btn btn-contact">Gửi</button>
+
+                                }
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--contact area end-->
+        </div>
+    </div>
+

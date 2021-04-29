@@ -1,0 +1,53 @@
+﻿@model BunyStore.Models.LoginModel
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="login_page_bg">
+    <div class="container">
+        <div class="customer_login">
+            <div class="row">
+                <!--login area start-->
+                <div class="col-lg-3 col-md-6"></div>
+                <div class=" col-lg-6 colm_none ">
+                    <div class="account_form login">
+                        <h2>login</h2>
+                        @using (Html.BeginForm("Login", "User", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="signin-form">
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <form>
+                                    @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div>
+                                        @Html.TextBoxFor(model => model.UserName, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                                    </div>
+                                    @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div>
+                                        @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="login_submit">
+                                        <a href="quen-mat-khau">Lost your password?</a>
+                                        <label for="remember">
+                                            <input id="remember" type="checkbox">
+                                            Remember me
+                                        </label>
+                                        <button type="submit">login</button>
+                                    </div>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <!--login area start-->
+                <!--register area start-->
+                <!--register area end-->
+            </div>
+        </div>
+    </div>
+</div>
+

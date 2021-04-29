@@ -1,0 +1,118 @@
+/*  04. banner section css here  */
+.banner_area{
+    @media #{$large-mobile}{
+      margin-bottom: 25px;
+    }
+}
+.single_banner{
+    @media #{$large-mobile}{
+       margin-bottom: 30px !important;
+    }
+}
+.banner_thumb{
+    position: relative;
+    overflow: hidden;
+    &:hover{
+        & img{
+            transform: scale(1.05);
+        }
+    }
+    & a{
+        @media #{$large-mobile}{
+           width: 100%;
+        }
+        & img{
+            @include transition(.3s);
+            @media #{$large-mobile}{
+               width: 100%;
+            }
+        }
+    }
+}
+
+.banner_style2{
+    
+    & .col-lg-3{
+        flex: 0 0 28%;
+        max-width: 28%;
+        @media #{$large-mobile}{
+          flex: 0 0 100%;
+          max-width: 100%;
+        }
+    }
+    & .col-lg-6{
+        flex: 0 0 44%;
+        max-width: 44%;
+        @media #{$large-mobile}{
+          flex: 0 0 100%;
+          max-width: 100%;
+        }
+    }
+}
+
+
+.sidebar_banner_area{
+    @media #{$tablet-device}{
+        display: flex;
+        margin-top: 30px;
+    }
+    @media #{$large-mobile}{
+       margin-top: 30px;
+    }
+    & .single_banner{
+        @media #{$tablet-device}{
+            margin-right: 20px;
+           margin-bottom: 0;
+            &:last-child{
+                margin-right: 0;
+            }
+        }
+        
+    }
+}
+
+
+
+/*home three css here*/
+.banner_three_bottom{
+    @media #{$large-mobile}{
+       margin-bottom: 30px;
+    }
+}
+
+
+
+/*home four css here*/
+.slider_s_four{
+    & .banner_thumb{
+        & a{
+            & img{
+                @media #{$tablet-device}{
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+
+.banner_style4{
+   @media #{$large-mobile}{
+       margin-bottom: 30px;
+    } 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

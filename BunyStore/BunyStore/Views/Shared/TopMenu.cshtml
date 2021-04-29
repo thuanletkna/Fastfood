@@ -1,0 +1,47 @@
+﻿@model List<KetnoiCSDL.EF.Menu>
+<div class="row align-items-center">
+    <div class="col-lg-4 col-md-5">
+        <div class="antomi_message">
+            <p>Get free shipping – Free 30 day money back guarantee</p>
+        </div>
+    </div>
+    <div class="col-lg-8 col-md-7">
+        <div class="header_top_settings text-right">
+            @{
+                var session =
+               (BunyStore.Common.UserLogin)Session[BunyStore.Common.CommonConstants.USER_SESSION];
+            }
+            @if (session == null)
+            {
+
+                <ul>
+                    @foreach (var item in Model)
+                    {
+                        <li><a href="@item.Link">@item.Text</a></li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <div class="col-lg-7 col-md-12">
+                    <div class="main_menu menu_position text-center">
+                        <nav>
+                            <ul>
+                                <li>
+                                    <a href="index.html" class="btn btn-success" style="background-color:#c40316;color:white;margin-right:calc(var(--bs-gutter-x)/ -2)">Xin chào:@session.Name<i class="fa fa-angle-down"></i></a>
+                                    <ul class="sub_menu">
+                                        <li><a href="@Url.Action("XemThongTin","User")">Xem thông tin</a></li>
+                                        <li><a href="@Url.Action("XemThongTinDonHang", "user")">Kiểm tra đơn hàng</a></li>
+                                        <li>@Html.ActionLink("Đăng xuất", "Logout", "User")</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+

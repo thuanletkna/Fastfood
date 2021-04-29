@@ -1,0 +1,146 @@
+﻿
+@model BunyStore.Models.RegisterModel
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section jsFooter{
+
+
+    <script src="~/assets/client/js/Controllers/userController.js"></script>
+}
+<div class="login_page_bg" >
+    <div class="container">
+        <div class="customer_login" >
+            <div class="row"  >
+                <!--login area start-->
+                <!--login area start-->
+                <!--register area start-->
+                <div class="col-lg-3 col-md-6"></div>
+                <div class=" col-lg-6 colm_none " >
+                    <div class="account_form register" >
+                        <h2>Register</h2>
+                        @using (Html.BeginForm("Register", "User", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="signin-form">
+                                <div id="status_view">
+                                    @if (TempData["AlertMessage"] != null)
+                                    {
+                                        <div id="AlertBox" class="alert @TempData["AlertType"] hide">
+                                            @TempData["AlertMessage"]
+                                        </div>
+                                    }
+                                </div>
+
+                                <form>
+                                    <div>
+                                        <div>
+                                            @if (ViewBag.Success != null)
+                                            {<div class="alert alert-success">@ViewBag.Success</div>}
+                                        </div>
+                                        <div>
+                                            @Html.LabelFor(model => model.UserName, new
+                                       {
+                                           @class = "control-label col-md-2"
+                                       })
+                                            <div>
+                                                @Html.TextBoxFor(model => model.UserName, new
+                                           {
+                                               @class = "form-control"
+                                           })
+                                                @Html.ValidationMessageFor(model => model.UserName,
+                "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div>
+                                            @Html.LabelFor(model => model.Password, new
+                                       {
+                                           @class =
+                "control-label col-md-2"
+                                       })
+                                            <div>
+                                                @Html.PasswordFor(model => model.Password, new
+                                           {
+                                               @class = "form-control"
+                                           })
+                                                @Html.ValidationMessageFor(model => model.Password,
+                "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div>
+                                            @Html.LabelFor(model => model.ConfirmPassword, new
+                                       {
+                                           @class = "control-label col-md-2"
+                                       })
+                                            <div>
+                                                @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div>
+                                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div>
+                                                @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div>
+                                        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div>
+                                            @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div>
+                                        @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div>
+                                            @Html.TextBoxFor(model => model.Phone, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div>
+                                        @Html.LabelFor(model => model.ProvinceID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div>
+                                            @Html.DropDownList("ProvinceID", new SelectList(new string[] { }), new { @class = "form-control", @id = "ddlProvince" })
+                                            @Html.ValidationMessageFor(model => model.ProvinceID, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        @Html.LabelFor(model => model.DistrictID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div>
+                                            @Html.DropDownList("DistrictID", new SelectList(new string[] { }), new { @class = "form-control", @id = "ddlDistrict" })
+                                            @Html.ValidationMessageFor(model => model.DistrictID, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div>
+                                        @Html.LabelFor(model => model.PrecinctID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div>
+                                            @Html.DropDownList("PrecinctID", new SelectList(new string[] { }), new { @class = "form-control", @id = "ddlPrecinctID" })
+                                            @Html.ValidationMessageFor(model => model.PrecinctID, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div>
+                                        @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div>
+                                            @Html.TextAreaFor(model => model.Address, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="login_submit">
+                                        <button type="submit">Register</button>
+                                    </div>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <!--register area end-->
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,220 @@
+﻿@model List<BunyStore.Models.CartItem>
+@{
+    ViewBag.Title = "HeaderCart";
+    KetnoiCSDL.EF.BunyStoreDbContext db = new KetnoiCSDL.EF.BunyStoreDbContext();
+    int All = 0;
+    var check = BunyStore.Common.CommonConstants.CheckLogin;
+    var customer = new KetnoiCSDL.EF.User();
+    if (check != null)
+    {
+        customer = check;
+    }
+
+}
+
+@section jsFooter{
+    @*<script src="~/assets/client/js/Controllers/CartController.js"></script>*@
+    <script>
+        var e = $('#tiente2').val();
+        //lấy ra giá tiền
+        var dai = e.length;
+        var f = new Intl.NumberFormat().format(e.substring(10, dai));
+        $('#tiente2').val(f);
+
+        var cart = {
+            init: function () {
+                cart.regEvents();
+            },
+            regEvents: function () {
+                $('#btnContinue').off('click').on('click', function () {
+                    window.location.href = "/";
+                });
+                $('#btnPaymentNoAccount').off('click').on('click', function () {
+                    window.location.href = "/thanh-toan-khong-tai-khoan";
+                });
+                //$('#btnPaymentWithAccount').off('click').on('click', function () {
+                //    window.location.href = "/thanh-toan-bang-tai-khoan";
+                //});
+
+
+                $('.txtQuantity').change(function () {
+                    var list = $('.txtQuantity');
+                    var cartList = [];
+                    $.each(list, function (i, item) {
+                        if ($(item).val() < 1) {
+                            alert("Số lượng món phải lớn hơn 1")
+                            $(item).val('1')
+                            cartList.push({
+                                Quantity: $(item).val(),
+                                Product: {
+                                    ID: $(item).data('id')
+                                }
+                            });
+                        }
+                        else if ($(item).val() > 99) {
+                            alert("Số lượng tối đa mỗi món đặt trong 1 lần là 99")
+                            $(item).val('99')
+                            cartList.push({
+                                Quantity: $(item).val(),
+                                Product: {
+                                    ID: $(item).data('id')
+                                }
+                            });
+                        }
+                        else {
+                            cartList.push({
+                                Quantity: $(item).val(),
+                                Product: {
+                                    ID: $(item).data('id')
+                                }
+                            });
+                        }
+                        $.ajax({
+                            url: '/Cart/Update',
+                            data: { cartModel: JSON.stringify(cartList) },
+                            dataType: 'json',
+                            type: 'POST',
+                            success: function (res) {
+                                if (res.status == true) {
+                                    window.location.href = "/gio-hang"
+                                }
+                            }
+                        });
+                    });
+                });
+
+
+                //$('#btnUpdate').change(function () {
+                //    var list = $('.txtQuantity');
+                //    var cartList = [];
+                //    $.each(list, function (i, item) {
+                //        cartList.push({
+                //            Quantity: $(item).val(),
+                //            Product: {
+                //                ID: $(item).data('id')
+                //            }
+                //        });
+                //    });
+
+
+                //    $.ajax({
+                //        url: '/Cart/Update',
+                //        data: { cartModel: JSON.stringify(cartList) },
+                //        dataType: 'json',
+                //        type: 'POST',
+                //        success: function (res) {
+                //            if (res.status == true) {
+                //                window.location.href = "/gio-hang";
+                //            }
+                //        }
+                //    })
+                //});
+
+
+
+
+
+                $('#btnUpdate').off('click').on('click', function () {
+                    var listProduct = $('.txtQuantity');
+                    var cartList = [];
+                    $.each(listProduct, function (i, item) {
+                        cartList.push({
+                            Quantity: $(item).val(),
+                            Product: {
+                                ID: $(item).data('id')
+                            }
+                        });
+                    });
+
+                    $.ajax({
+                        url: '/Cart/Update',
+                        data: { cartModel: JSON.stringify(cartList) },
+                        dataType: 'json',
+                        type: 'POST',
+                        success: function (res) {
+                            if (res.status == true) {
+                                window.location.href = "/gio-hang";
+                            }
+                        }
+                    })
+                });
+
+                $('#btnDeleteAll').off('click').on('click', function () {
+
+
+                    $.ajax({
+                        url: '/Cart/DeleteAll',
+                        dataType: 'json',
+                        type: 'POST',
+                        success: function (res) {
+                            if (res.status == true) {
+                                window.location.href = "/gio-hang";
+                            }
+                        }
+                    })
+                });
+
+                $('.btn-delete').off('click').on('click', function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        data: { id: $(this).data('id') },
+                        url: '/Cart/Delete',
+                        dataType: 'json',
+                        type: 'POST',
+                        success: function (res) {
+                            if (res.status == true) {
+                                window.location.href = "/gio-hang";
+                            }
+                        }
+                    })
+                });
+            }
+        }
+        cart.init();
+    </script>
+}
+
+        
+                    
+<div class="mini_cart">
+    <div class="cart_close">
+        <div class="cart_text">
+            <h3>cart</h3>
+        </div>
+        <div class="mini_cart_close">
+            <a href="javascript:void(0)"><i class="ion-android-close"></i></a>
+        </div>
+    </div>
+    @foreach (var item in Model)
+    {
+        <div class="cart_item">
+            <div class="cart_img">
+                <a href="#"><img src="@item.Product.Image" alt=""></a>
+            </div>
+            <div class="cart_info">
+                <a href="#">@item.Product.Name</a>
+                <p>Qty: @item.Quantity X <span class="txtQuantity">  @item.Product.Price.GetValueOrDefault(0).ToString("N0") VNĐ </span></p>
+            </div>
+
+            <div class="cart_remove">
+                <a href="#" data-id="@item.Product.ID" class="btn-delete"><i class="ion-android-close"></i></a>
+            </div>
+        </div>
+        All += int.Parse((item.Product.Price * item.Quantity).ToString());
+
+    }
+
+    <div class="mini_cart_table">
+        <div class="cart_total">
+            <span>Tổng tiền:</span>
+            <span class="cart_amount" value="Tổng tiền:@All" id="tiente2">@All VNĐ</span>
+        </div>
+    </div>
+    <div class="mini_cart_footer">
+        <div class="cart_button">
+            <a href="/gio-hang/">Xem giỏ hàng</a>
+        </div>
+
+    </div>
+</div>
+

@@ -1,0 +1,107 @@
+﻿@using KetnoiCSDL.EF
+@using PagedList.Mvc;
+@model PagedList.PagedList<KetnoiCSDL.EF.Order>
+
+@{
+    ViewBag.Title = "XemThongTinDonHang";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-warning">Không có lịch sử mua hàng</div>
+}
+else
+{
+<div class="wishlist_page_bg">
+    <div class="container">
+        <h3 style="text-align:center;color:red">THÔNG TIN ĐƠN HÀNG</h3>
+        <div class="wishlist_area">
+            <div class="wishlist_inner">
+                <form action="#">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table_desc wishlist">
+                                <div class="cart_page table-responsive">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th class="product_remove">Mã đơn hàng</th>
+                                                <th class="product_thumb">Tên người đặt hàng</th>
+                                                <th class="product_name">Số điện thoại</th>
+                                                <th class="product-price">Email</th>
+
+                                                <th class="product_quantity">Địa chỉ</th>
+                                                <th class="product_quantity">Xã/Thị trấn</th>
+                                                <th class="product_quantity">Huyện</th>
+                                                <th class="product_quantity">Tỉnh/TP</th>
+
+                                                <th class="product_total">Ngày tạo</th>
+                                                <th class="product_total">Trạng thái</th>
+                                                <th class="product_total">Hình thức thanh toán</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model)
+                                            {
+                                            <tr>
+                                                <td class="product_remove"> @Html.DisplayFor(modelItem => item.ID)</td>
+                                                <td class="product_thumb">@Html.DisplayFor(modelItem => item.ShipName)</td>
+                                                <td class="product_name">@Html.DisplayFor(modelItem => item.ShipMobile)</td>
+                                                <td class="product_name"> @Html.DisplayFor(modelItem => item.ShipEmail)</td>
+                                                <td class="product_quantity">@Html.DisplayFor(modelItem => item.ShipAddress )</td>
+                                                <td class="product_quantity">@Html.DisplayFor(modelItem => item.ShipPrecinct)</td>
+                                                <td class="product_quantity">@Html.DisplayFor(modelItem => item.ShipDistrict)</td>
+                                                <td class="product_quantity">@Html.DisplayFor(modelItem =>  item.ShipProvince)</td>
+                                                <td class="product_name">  @Html.DisplayFor(modelItem => item.CreatedDate)</td>
+                                                @if (item.Status == "Đang giao hàng")
+                                                {
+                                                    <td class="product_name" style="color:red">
+
+                                                        @Html.DisplayFor(modelItem => item.Status)
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td class="product_name" style="color:green">
+
+                                                        @Html.DisplayFor(modelItem => item.Status)
+                                                    </td>
+                                                }
+
+                                                <td class="product_name">
+                                                    @Html.DisplayFor(modelItem => item.PaymentForms)
+                                                </td>
+
+
+                                            </tr>
+                                            }
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        Trang @( Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)/ @Model.PageCount
+        <div class="shop_toolbar t_bottom">
+            <div class="pagination">
+                <ul>
+                    <li style="color:red">@Html.PagedListPager(Model, page => Url.Action("XemThongTinDonHang", new { page, @searchString = @ViewBag.SearchString }))</li>
+                    @*<li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li class="next"><a href="#">next</a></li>
+                    <li><a href="#">>></a></li>*@
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+</div>
+}

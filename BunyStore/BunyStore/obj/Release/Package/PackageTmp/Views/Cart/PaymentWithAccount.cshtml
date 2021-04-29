@@ -1,0 +1,307 @@
+﻿@model BunyStore.Models.CustomerModel
+@{
+    ViewBag.Title = "PaymentWithAccount";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string CartSession = "CartSession";
+    var cart = Session[CartSession];
+    var listcart = (List<BunyStore.Models.CartItem>)cart;
+    int All = 0;
+}
+
+<div class="checkout_page_bg">
+    <div class="container">
+        <div class="Checkout_section">
+            <div class="row">
+                <div class="col-12">
+                    <div class="user-actions">
+                        <h3>
+                            <i class="fa fa-file-o" aria-hidden="true"></i>
+                            Returning customer?
+                            <a class="Returning" href="#checkout_login" data-bs-toggle="collapse" aria-expanded="true">Click here to login</a>
+
+                        </h3>
+                        <div id="checkout_login" class="collapse" data-parent="#accordion">
+                            <div class="checkout_info">
+                                <p>If you have shopped with us before, please enter your details in the boxes below. If you are a new customer please proceed to the Billing & Shipping section.</p>
+                                <form action="#">
+                                    <div class="form_group">
+                                        <label>Username or email <span>*</span></label>
+                                        <input type="text">
+                                    </div>
+                                    <div class="form_group">
+                                        <label>Password  <span>*</span></label>
+                                        <input type="text">
+                                    </div>
+                                    <div class="form_group group_3 ">
+                                        <button type="submit">Login</button>
+                                        <label for="remember_box">
+                                            <input id="remember_box" type="checkbox">
+                                            <span> Remember me </span>
+                                        </label>
+                                    </div>
+                                    <a href="#">Lost your password?</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-actions">
+                        <h3>
+                            <i class="fa fa-file-o" aria-hidden="true"></i>
+                            Returning customer?
+                            <a class="Returning" href="#checkout_coupon" data-bs-toggle="collapse" aria-expanded="true">Click here to enter your code</a>
+
+                        </h3>
+                        <div id="checkout_coupon" class="collapse" data-parent="#accordion">
+                            <div class="checkout_info coupon_info">
+                                <form action="#">
+                                    <input placeholder="Coupon code" type="text">
+                                    <button type="submit">Apply coupon</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="checkout_form">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="checkout_form_left">
+                            @using (Html.BeginForm("PaymentNoAccount", "Cart", FormMethod.Post))
+                            {
+                                <form action="#">
+                                    <h3>Billing Details</h3>
+
+                                    <div class="row">
+
+                                        <div class="col-lg-6 mb-20">
+                                            Tên người nhận: <span id="txtName">@Model.shipName</span>
+                                        </div>
+
+
+
+                                        <div class="col-12 mb-20">
+                                            <p>Địa chỉ: <span id="txtAddress">@Model.Address  @Model.PrecinctID  @Model.DistrictID  @Model.ProvinceID</span></p>
+                                        </div>
+
+                                        <div class="col-lg-6 mb-20">
+                                            <p>Số điện thoại: <span id="txtMobile">@Model.Phone</span></p>
+                                        </div>
+                                        <div class="col-lg-6 mb-20">
+                                            <p>Email: <span id="txtEmail">@Model.Email</span></p>
+                                        </div>
+
+
+                                    </div>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="checkout_form_right">
+                            <form action="#">
+                                <h3>Your order</h3>
+                                <div class="order_table table-responsive">
+
+                                    @if (listcart.Count > 0)
+                                    {
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Product</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in listcart)
+                                                {
+                                                    <tr>
+                                                        <td> @item.Product.Name <strong> × @item.Quantity</strong></td>
+                                                        <td> @((item.Product.Price.GetValueOrDefault(0) * item.Quantity).ToString("N0"))</td>
+                                                    </tr>
+                                                    All += int.Parse((item.Product.Price * item.Quantity).ToString());
+                                                }
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Cart Subtotal</th>
+                                                    <td>@All VNĐ</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Shipping</th>
+                                                    <td><strong>$5.00</strong></td>
+                                                </tr>
+                                                <tr class="order_total">
+                                                    <th>Order Total</th>
+                                                    <td><strong>@All VNĐ</strong></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    }
+                                </div>
+                                <div class="payment_method" id="infopayment">
+
+                                    <div class="panel-default">
+                                        <input id="paypal" name="hinhthuc" type="radio" data-target="createp_account" />
+                                        <label for="payment_defult" data-bs-toggle="collapse" data-bs-target="#collapsedefult" aria-controls="collapsedefult">Thanh toán quaPayPal <img src="assets/img/icon/papyel.png" alt=""></label>
+
+                                        <div id="collapsedefult" class="collapse one" data-parent="#accordion">
+                                            <div class="card-body1">
+                                                <p>Hệ thống sẽ chuyển qua Website chính thức của Paypal để thực hiện thanh toán</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-default">
+                                        <input type="radio" id="momo" name="hinhthuc" data-target="createp_account" />
+                                        <label for="payment_defult" data-bs-toggle="collapse" data-bs-target="#collapsedefult" aria-controls="collapsedefult">Thanh toán qua Momo <img src="assets/img/icon/papyel.png" alt=""></label>
+
+                                        <div id="collapsedefult" class="collapse one" data-parent="#accordion">
+                                            <div class="card-body1">
+                                                <p>Hệ thống sẽ chuyển qua ứng dụng Momo để thực hiện thanh toán</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-default">
+                                        <input type="radio" id="delivety" name="hinhthuc" data-target="createp_account" />
+                                        <label for="payment_defult" data-bs-toggle="collapse" data-bs-target="#collapsedefult" aria-controls="collapsedefult">Thanh toán khi nhận hàng<img src="assets/img/icon/papyel.png" alt=""></label>
+
+                                        <div id="delivety" class="collapse one" data-parent="#accordion">
+                                            <div class="card-body1">
+                                                <p>Bạn sẽ thanh toán ngay khi nhận được hàng</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="selection">
+
+                                        <ul id="myList">
+                                            <li>
+                                                @Html.ActionLink("Quay lại giỏ hàng", "Index", "Cart", null, new { @id = "btnBack", @class = "btn btn-primary form-control" })
+                                            </li>
+                                            <li>
+                                                @Html.ActionLink("Tiếp tục mua hàng", "Index", "Home", null, new { @class = "btn btn-info form-control" })
+                                            </li>
+                                            <li>
+                                                @Html.ActionLink("Thanh toán Paypal", "PaymentWithPaypal", "Payment", Model, new { @class = "btn btn-success form-control", @id = "payment" })
+                                            </li>
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section jsFooter{
+    @*<script src="~/assets/client/js/Controllers/Payment.js"></script>*@
+    <script>
+        var name = $('#txtName').text();
+        var mobile = $('#txtMobile').text();
+        var address = $('#txtAddress').text();
+        var email = $('#txtEmail').text();
+
+        var model = { name: name, phone: mobile, address: address, email: email }
+
+        //lay guild của trang web hiện tại
+        var abc = window.location.href;
+        var linktemp1 = abc.split('/'); // đây là tìm cách kí tự / tách thành từng chuỗi nha
+        var linktemp2 = linktemp1[5];
+
+
+        $("#paypal").click(function () {
+            var li = document.createElement("li");
+            var List = document.getElementById("myList");
+            List.replaceChild(li, List.childNodes[5]);
+
+            var temp = List.childNodes[5]
+            var a = document.createElement("a");
+            var textnode = document.createTextNode("Thanh toán Paypal");
+            a.setAttribute("id", "payment");
+            a.setAttribute("href", "https://" + linktemp1[2] + "/Payment/PaymentWithPaypal/" + linktemp2);
+            a.setAttribute("class", "btn btn-success form-control");
+            a.setAttribute("style", "margin-top:10px");
+            a.appendChild(textnode);
+            temp.appendChild(a);
+
+
+            $.ajax({
+                url: "https://" + linktemp1[1] + "/Payment/PaymentWitPaypal",
+                type: 'POST',
+                data: model,
+                dataType: "jsonp",
+            });
+        });
+
+        $("#momo").click(function () {
+            var li = document.createElement("li");
+            var List = document.getElementById("myList");
+            List.replaceChild(li, List.childNodes[5]);
+
+            var temp = List.childNodes[5]
+            var a = document.createElement("a");
+            var textnode = document.createTextNode("Thanh toán Momo");
+            a.setAttribute("id", "payment");
+            a.setAttribute("href", "https://" + linktemp1[2] + "/Payment/PaymentWithMomo/" + linktemp2);
+            a.setAttribute("class", "btn btn-success form-control");
+            a.setAttribute("style", "margin-top:10px");
+            a.appendChild(textnode);
+            temp.appendChild(a);
+
+            $.ajax({
+                url: "https://" + linktemp1[1] + "/Payment/PaymentWithMoMo",
+                type: 'POST',
+                data: model,
+                dataType: "jsonp",
+            });
+        });
+
+        $("#delivety").click(function () {
+            var li = document.createElement("li");
+            var List = document.getElementById("myList");
+            List.replaceChild(li, List.childNodes[5]);
+
+            var temp = List.childNodes[5]
+            var a = document.createElement("a");
+            var textnode = document.createTextNode("Thanh toán khi nhận hàng");
+            a.setAttribute("id", "test");
+            a.setAttribute("href", "https://" + linktemp1[2] + "/Payment/PaymentWithDelivety");
+            a.setAttribute("class", "btn btn-success form-control");
+            a.setAttribute("style", "margin-top:10px");
+            a.appendChild(textnode);
+            temp.appendChild(a);
+        });
+    </script>
+}
+<style>
+    hr {
+        border: 1px solid
+    }
+
+    #infocustomer p {
+        padding-left: 20px;
+        font-size: 20px;
+        font-weight: 100;
+    }
+
+    #infopayment div {
+        padding-left: 20px;
+    }
+
+    #infopayment label {
+        font-size: 20px;
+        font-weight: 100;
+    }
+
+    #listcart p {
+        padding-left: 20px;
+        font-size: 20px;
+        font-weight: 100;
+    }
+
+
+    #selection a {
+        margin-top: 10px
+    }
+</style>

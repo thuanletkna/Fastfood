@@ -1,0 +1,49 @@
+﻿<div class="sidebar-nav navbar-collapse">
+    <ul class="nav" id="side-menu">
+        <li class="sidebar-search">
+            <div class="input-group custom-search-form">
+                <input type="text" class="form-control" placeholder="Search">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+            <!-- /input-group -->
+        </li>
+
+        <li>
+            @Html.ActionLink("Danh sách các biểu đồ", "Chart", "Home")
+        </li>
+        <li>
+            @Html.ActionLink("Danh sách sản phẩm", "Product", "Home")
+            <!-- /.nav-second-level -->
+        </li>
+        <li>
+            @Html.ActionLink("Danh sách loại sản phẩm", "ProductCategory", "FoodType")
+        </li>
+        <li>
+            @Html.ActionLink("Danh sách banner slide", "Index", "Slide")
+        </li>
+        <li>
+            @Html.ActionLink("Danh sách người dùng", "Nguoidung", "Nguoidung")
+        </li>
+        <li class="navbar-item">
+            <a style="color:#337ab7" class="navbar-link collapse" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                Danh sách đơn hàng  <i class="fa fa-caret-down" style="float:right"></i>
+            </a>
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body">
+                    @Html.ActionLink("Đơn hàng đang giao", "OrderListAllFalse", "Orders", null , new { @style = "display: block;padding: 10px 30px;" })
+                </div>
+                <div class="card card-body">
+                    @Html.ActionLink("Đơn hàng đã giao", "OrderListAllTrue", "Orders", null ,new { @style = "display: block;padding: 10px 30px;"})
+                </div>
+            </div>
+        </li>
+        <li>
+            <a>Danh sách khách hàng</a>
+        </li>
+    </ul>
+</div>
+

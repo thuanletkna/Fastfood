@@ -1,0 +1,71 @@
+﻿@model KetnoiCSDL.EF.Order
+@{
+    ViewBag.Title = "DetailsOrderTrue";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+}
+
+<h2>XÁC NHẬN THÔNG TIN ĐƠN HÀNG CẦN XÓA</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Mã đơn hàng:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ID)
+        </dd>
+        <dt>
+            Tên khách hàng:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ShipName)
+        </dd>
+
+        <dt>
+            SĐT:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ShipMobile)
+        </dd>
+
+        <dt>
+            Email:
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShipEmail)
+        </dd>
+        <dt>
+            Tình trạng đơn hàng:
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+        <dt>
+            Hình thức thanh toán:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PaymentForms)
+        </dd>
+        <dt>
+            Thời gian cập nhật:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            @Html.ActionLink("Xóa", "DeleteOrderTrue", Model.ID, new { @class = "btn btn-danger" })
+            @Html.ActionLink("Quay lại", "OrderListAllTrue", new { page = 1 }, new { @class = "btn btn-info" })
+        </div>
+    }
+</div>

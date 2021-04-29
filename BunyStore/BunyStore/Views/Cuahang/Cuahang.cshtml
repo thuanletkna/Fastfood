@@ -1,0 +1,69 @@
+﻿@model IEnumerable<KetnoiCSDL.EF.Store>
+@{
+    ViewBag.Title = "Cuahang";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string a = null;
+    KetnoiCSDL.EF.Province temp = null;
+}
+
+
+@using (Html.BeginForm())
+{
+    <div class="checkout_page_bg">
+        <div class="container">
+            <div class="Checkout_section">
+                <div class="checkout_form">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <div class="checkout_form_left">
+                                
+                                <table class="table">
+                                    <thead>
+                                        <tr class="row" id="tieude">
+                                            <th class="col-lg-3" scope="col">Tên cửa hàng</th>
+                                            <th class="col-lg-7" scope="col" style="text-align:center">Địa Chỉ</th>
+                                            <th class="col-lg-2" scope="col">Số điện thoại</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.Count() == 0)
+                                        {
+                                            <tr>
+                                                <td colspan="5" class="alert alert-danger" style="text-align:center">Không có cửa hàng nào trong thành phố @BunyStore.Common.CommonConstants.Tinh</td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            foreach (var item in Model)
+                                            {
+                                                <tr class="row">
+                                                    <td class="col-lg-3" style="color:red">
+                                                        @item.nameStore
+                                                    </td>
+                                                    <td class="col-lg-7">
+                                                        @item.Address
+                                                    </td>
+                                                    <td class="col-lg-2">
+                                                        @item.Phone
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <div class="checkout_form_right">
+                                @Html.DropDownList("Tinh", null, new { @id = "Tinh", @class = "form-control" })
+                                <input type="submit" class="btn btn-success" value="Tìm kiếm" style="margin-top:10px" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

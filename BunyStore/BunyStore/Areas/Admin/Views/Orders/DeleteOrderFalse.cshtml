@@ -1,0 +1,86 @@
+﻿@model KetnoiCSDL.EF.Order
+@{
+    ViewBag.Title = "DeleteOrder";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2>XÁC NHẬN THÔNG TIN ĐƠN HÀNG CẦN XÓA</h2>
+
+<h3>Bạn có chắc chắn muốn xóa đơn hàng này ?</h3>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Mã đơn hàng:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ID)
+        </dd>
+        <dt>
+            Tên khách hàng:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ShipName)
+        </dd>
+
+        <dt>
+            SĐT:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ShipMobile)
+        </dd>
+
+        <dt>
+            Email:
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShipEmail)
+        </dd>
+        <dt>
+            Tình trạng đơn hàng
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+        <dt>
+            Hình thức thanh toán
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PaymentForms)
+        </dd>
+        <dt>
+            Thời gian cập nhật gần nhất
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div>
+            <input id="delete" type="submit" value="XÓA ĐƠN HÀNG" class="btn btn-danger" /> |
+            @Html.ActionLink("Quay lại", "OrderListAllFalse", new { page = 1 }, new { @class = "btn btn-info" })
+        </div>
+    }
+</div>
+
+@section jsFooter
+{
+    <script>
+        $("#delete").on('click', function () {
+            var a = confirm("Bạn có chắc chắn muốn xóa?")
+            var link = window.location.href.split("/")
+            if (a == true) {
+                alert("Xóa thành công")
+            }
+        });
+    </script>
+
+}

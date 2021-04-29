@@ -1,0 +1,14 @@
+﻿@model List<KetnoiCSDL.EF.Menu>
+<ul class="offcanvas_main_menu">
+    <li class="menu-item-has-children active">
+       
+            @foreach (var item in Model)
+                {
+                    <li>
+                        <a class="active" href="@item.Link" target="@item.Target">@item.Text</a>
+                        
+                    </li>
+                }
+       </li>
+   
+</ul>

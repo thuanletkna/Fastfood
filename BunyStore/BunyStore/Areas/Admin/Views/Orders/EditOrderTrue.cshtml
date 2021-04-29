@@ -1,0 +1,166 @@
+﻿@model KetnoiCSDL.EF.Order
+@{
+    ViewBag.Title = "EditOrder";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section css{
+    <style>
+        form {
+            margin: 0;
+        }
+
+        dt {
+            margin-bottom: 10px
+        }
+    </style>
+    <link href="~/assets/client/css/RadioBootStrap.css" rel="stylesheet" />
+}
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Mã đơn hàng:
+        </dt>
+        <dd id="ID_DH">
+            <span>@Html.DisplayFor(model => model.ID)</span>
+        </dd>
+        <dt>
+            Tên khách hàng:
+        </dt>
+        <dd id="Name">
+            <span> @Html.DisplayFor(model => model.ShipName)</span>
+
+        </dd>
+
+        <dt>
+            SĐT:
+        </dt>
+        <dd id="Phone">
+            <span> @Html.DisplayFor(model => model.ShipMobile)</span>
+        </dd>
+
+        <dt>
+            Email:
+        </dt>
+
+        <dd id="Email">
+            <span> @Html.DisplayFor(model => model.ShipEmail)</span>
+        </dd>
+
+        <dt>
+            Địa chỉ:
+        </dt>
+
+        <dd id="Address">
+            <span> @Html.DisplayFor(model => model.ShipAddress)</span>
+        </dd>
+
+        <dt>
+            Hình thức thanh toán
+        </dt>
+        <dd id="Payment">
+            <span> @Html.DisplayFor(model => model.PaymentForms)</span>
+        </dd>
+        <dt>
+            Thời gian cập nhật gần nhất
+        </dt>
+        <dd id="Createdate">
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+        <dt>
+            Tình trạng đơn hàng
+        </dt>
+
+        <dd>
+            @if (Model.Status == "Đang giao hàng")
+            {
+                <form style="margin:0; max-width:160px">
+                    <div class="radiobtn" id="btndagiao">
+                        <input type="radio" id="dagiao"
+                               name="drone" value="dagiao" />
+                        <label for="dagiao">Đã giao</label>
+                    </div>
+
+                    <div class="radiobtn" id="btndanggiao">
+                        <input type="radio" id="danggiao"
+                               name="drone" value="danggiao" checked />
+                        <label for="danggiao">Đang giao</label>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <form style="margin:0; max-width:160px">
+                    <div class="radiobtn" id="btndagiao">
+                        <input type="radio" id="dagiao"
+                               name="drone" value="dagiao" checked />
+                        <label for="dagiao">Đã giao</label>
+                    </div>
+
+                    <div class="radiobtn" id="btndanggiao">
+                        <input type="radio" id="danggiao"
+                               name="drone" value="danggiao" />
+                        <label for="danggiao">Đang giao</label>
+                    </div>
+                </form>
+            }
+        </dd>
+    </dl>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div>
+            <input id="save" type="submit" value="Save" class="btn btn-default" />
+            @Html.ActionLink("Quay lại", "OrderListAllTrue", new { page = 1 }, new { @class = "btn btn-info" })
+        </div>
+    }
+</div>
+@section jsFooter
+{
+    <script>
+        var abc = window.location.href;
+        var link = abc.split('/'); // đây là tìm cách kí tự / tách thành từng chuỗi nha
+
+        //giá trị của id danggiao
+        var danggiao = $("#btndanggiao").val();
+        //giá trị của id dagiao
+        var dagiao = $("#btndagiao").val();
+        //tình trang don hang
+        //Vì đang ở trang chưa xử lý nên giá trị mặc định sẽ là Đang giao hàng
+        var tinhtrang = "";
+        //các thông tin có sẵn
+        var id = $("#ID_DH span").text();
+        var name = $("#Name span").text();
+        var phone = $("#Phone span").text();
+        var email = $("#Email span").text();
+        var address = $("#Address span").text();
+        var payment = $("#Payment span").text();
+
+        //tạo 1 mảng để chứ dữ liệu
+        var model = []
+
+        //bát đầu hàm xử lý
+
+
+        $("#btndanggiao").click(function () {
+            tinhtrang = "Đang giao hàng"
+        });
+
+        $("#btndagiao").click(function () {
+            tinhtrang = "Đã giao hàng"
+        });
+
+        $("#save").click(function () {
+            var model = { id: id, status: tinhtrang}
+
+            var b = [];
+            b = model;
+            $.ajax({
+                //url: "/Admin/Orders/EditOrderTrue",
+                type: 'POST',
+                data: model,
+            });
+        });
+
+    </script>
+}

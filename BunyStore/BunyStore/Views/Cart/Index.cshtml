@@ -1,0 +1,287 @@
+﻿@model List<BunyStore.Models.CartItem>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    KetnoiCSDL.EF.BunyStoreDbContext db = new KetnoiCSDL.EF.BunyStoreDbContext();
+    int All = 0;
+    var check = BunyStore.Common.CommonConstants.CheckLogin;
+    var customer = new KetnoiCSDL.EF.User();
+    if (check != null)
+    {
+        customer = check;
+    }
+
+}
+@section jsFooter{
+    @*<script src="~/assets/client/js/Controllers/CartController.js"></script>*@
+    <script>
+        var e = $('#tiente2').val();
+        //lấy ra giá tiền
+        var dai = e.length;
+        var f = new Intl.NumberFormat().format(e.substring(10, dai));
+        $('#tiente2').val(f);
+
+        var cart = {
+            init: function () {
+                cart.regEvents();
+            },
+            regEvents: function () {
+                //$('#btnContinue').off('click').on('click', function () {
+                //    window.location.href = "trang-chu";
+                //});
+                $('#btnPaymentNoAccount').off('click').on('click', function () {
+                    window.location.href = "/thanh-toan-khong-tai-khoan";
+                });
+                //$('#btnPaymentWithAccount').off('click').on('click', function () {
+                //    window.location.href = "/thanh-toan-bang-tai-khoan";
+                //});
+
+
+                $('.txtQuantity').change(function () {
+                    var list = $('.txtQuantity');
+                    
+                    var cartList = [];
+                    $.each(list, function (i, item) {
+                        if ($(item).val() <=0) {
+                            
+                            $(item).val('1')
+                            cartList.push({
+                                Quantity: $(item).val(),
+                                Product: {
+                                    ID: $(item).data('id')
+                                }
+                            });
+                        }
+                        else if ($(item).val() > 99) {
+                            alert("Số lượng tối đa mỗi món đặt trong 1 lần là 99")
+                            $(item).val('99')
+                            cartList.push({
+                                Quantity: $(item).val(),
+                                Product: {
+                                    ID: $(item).data('id')
+                                }
+                            });
+                        }
+                        else {
+                            cartList.push({
+                                Quantity: $(item).val(),
+                                Product: {
+                                    ID: $(item).data('id')
+                                }
+                            });
+                        }
+                        $.ajax({
+                            url: '/Cart/Update',
+                            data: { cartModel: JSON.stringify(cartList) },
+                            dataType: 'json',
+                            type: 'POST',
+                            success: function (res) {
+                                if (res.status == true) {
+                                    window.location.href = "/gio-hang"
+                                }
+                            }
+                        });
+                    });
+                });
+
+
+                //$('#btnUpdate').change(function () {
+                //    var list = $('.txtQuantity');
+                //    var cartList = [];
+                //    $.each(list, function (i, item) {
+                //        cartList.push({
+                //            Quantity: $(item).val(),
+                //            Product: {
+                //                ID: $(item).data('id')
+                //            }
+                //        });
+                //    });
+
+
+                //    $.ajax({
+                //        url: '/Cart/Update',
+                //        data: { cartModel: JSON.stringify(cartList) },
+                //        dataType: 'json',
+                //        type: 'POST',
+                //        success: function (res) {
+                //            if (res.status == true) {
+                //                window.location.href = "/gio-hang";
+                //            }
+                //        }
+                //    })
+                //});
+
+
+
+
+
+                $('#btnUpdate').off('click').on('click', function () {
+                    var listProduct = $('.txtQuantity');
+                    var cartList = [];
+                    $.each(listProduct, function (i, item) {
+                        cartList.push({
+                            Quantity: $(item).val(),
+                            Product: {
+                                ID: $(item).data('id')
+                            }
+                        });
+                    });
+
+                    $.ajax({
+                        url: '/Cart/Update',
+                        data: { cartModel: JSON.stringify(cartList) },
+                        dataType: 'json',
+                        type: 'POST',
+                        success: function (res) {
+                            if (res.status == true) {
+                                window.location.href = "/gio-hang";
+                            }
+                        }
+                    })
+                });
+
+                $('#btnDeleteAll').off('click').on('click', function () {
+
+
+                    $.ajax({
+                        url: '/Cart/DeleteAll',
+                        dataType: 'json',
+                        type: 'POST',
+                        success: function (res) {
+                            if (res.status == true) {
+                                window.location.href = "/gio-hang";
+                            }
+                        }
+                    })
+                });
+
+                $('.btn-delete').off('click').on('click', function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        data: { id: $(this).data('id') },
+                        url: '/Cart/Delete',
+                        dataType: 'json',
+                        type: 'POST',
+                        success: function (res) {
+                            if (res.status == true) {
+                                window.location.href = "/gio-hang";
+                            }
+                        }
+                    })
+                });
+            }
+        }
+        cart.init();
+    </script>
+}
+
+
+<div class="cart_page_bg">
+    <div class="container">
+        <div class="shopping_cart_area">
+            <form action="#">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table_desc">
+                            <div class="cart_page table-responsive">
+                                @if (Model.Count > 0)
+                                {
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th class="product_remove">Xóa sản phẩm</th>
+                                                <th class="product_thumb">Hình ảnh</th>
+                                                <th class="product_name">Tên sản phẩm</th>
+                                                <th class="product-price">Giá</th>
+                                                <th class="product_quantity">Số lượng</th>
+                                                <th class="product_total">Tổng tiền</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model)
+                                            {
+                                                <tr>
+                                                    <td><a href="#" data-id="@item.Product.ID" class="btn-delete"><i class="fa fa-trash-o"></i></a></td>
+                                                    <td class="product_thumb"><a href="#"><img src="@item.Product.Image" alt=""></a></td>
+                                                    <td class="product_name">@item.Product.Name</td>
+                                                    <td class="product-price">@item.Product.Price.GetValueOrDefault(0).ToString("N0") VNĐ</td>
+                                                    <td class="product_quantity"><label>Quantity</label> <input min="1" max="100" value="@item.Quantity" type="number" class="txtQuantity" data-id="@item.Product.ID"></td>
+                                                    <td class="product_total">@((item.Product.Price.GetValueOrDefault(0) * item.Quantity).ToString("N0")) VNĐ</td>
+                                                </tr>
+                                                All += int.Parse((item.Product.Price * item.Quantity).ToString());
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                            </div>
+                            <div class="cart_submit">
+                                <button type="submit" id="btnContinue"><a href="/trang-chu">Tiếp tục mua hàng</a></button>
+                                <button type="submit" id="btnUpdate">Cập nhật giỏ hàng</button>
+                                <button type="button" id="btnDeleteAll">Xóa giỏ hàng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--coupon code area start-->
+                <div class="coupon_area">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <div class="coupon_code left">
+                                <h3>MÃ GIẢM GIÁ</h3>
+                                <div class="coupon_inner">
+                                    <p>Vui lòng nhập mã giảm giá cửa hàng cung cấp nếu có.</p>
+                                    <input placeholder="Coupon code" type="text">
+                                    <button type="submit">Áp dụng</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <div class="coupon_code right">
+                                <h3>Cart Totals</h3>
+                                <div class="coupon_inner">
+                                    <div class="cart_subtotal">
+                                        <p>Tổng tiền</p>
+                                        <p class="cart_amount" value="Tổng tiền:@All" id="tiente2">@All VNĐ</p>
+                                    </div>
+                                    <div class="cart_subtotal ">
+                                        <p>Phí Ship</p>
+                                        <p class="cart_amount"><span>Phí ship:</span> 0 VNĐ</p>
+                                    </div>
+                                    <a href="#">Tính phí ship</a>
+
+                                    <div class="cart_subtotal">
+                                        <p>Tổng tiền</p>
+                                        <p class="cart_amount" value="Tổng tiền:@All" id="tiente2">@All VNĐ</p>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="checkout_btn">
+                            @if (Model.Count > 0)
+                            {
+
+                                if (check == null)
+                                {
+                                    <a id="btnPaymentNoAccount" href="#">Thanh toán</a>
+
+                                }
+                                else
+                                {
+                                    @Html.ActionLink("Thanh toán", "PaymentWithAccount", customer, new { @class = "btn btn-success" })
+                                    @*<button type="button" id="btnPaymentWithAccount" class="btn btn-danger">Thanh toán</button>*@
+                                }
+                            }
+                            else
+                            {
+                                <span class="alert alert-danger">Chưa có sản phẩm nào trong giỏ hàng</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <!--coupon code area end-->
+            </form>
+        </div>
+    </div>
+</div>

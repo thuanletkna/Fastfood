@@ -1,0 +1,119 @@
+﻿@using KetnoiCSDL.EF
+@using PagedList.Mvc;
+@model PagedList.PagedList<KetnoiCSDL.EF.Order>
+@{
+    ViewBag.Title = "OrderListAll";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2>THÔNG TIN DANH SÁCH ĐƠN HÀNG</h2>
+@using (Html.BeginForm("OrderListAllFalse", "Orders", FormMethod.Get))
+{
+    <div class="row form-group">
+        <div class="col-lg-12">
+            <div class="col-md-4">
+                <input type="text" value="@ViewBag.SearchString" class="form-control" name="searchString" />
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-success">Tìm kiếm</button>
+            </div>
+        </div>
+    </div>
+}
+
+<table class="table" border="1" style="text-align:center">
+    <tr>
+        <th style="width:150px">
+            Mã đơn hàng
+        </th>
+        <th style="width:300px">
+            Tên người đặt hàng
+        </th>
+        <th style="width:300px">
+            Số điện thoại
+        </th>
+        <th style="width:300px">
+            Email
+        </th>
+        <th style="width:300px">
+            Địa chỉ
+        </th>
+
+        <th style="width:200px">
+            Ngày cập nhật
+        </th>
+        <th style="width:200px">
+            Trạng thái
+        </th>
+        <th style="width:200px">
+            Hình thức thanh toán
+        </th>
+        <th style="width:200px">
+            Tác vụ
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShipName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShipMobile)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.ShipEmail)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.ShipAddress)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+
+            @if (item.Status == "Đang giao hàng")
+            {
+                <td style="color:red">
+
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+            }
+            else
+            {
+                <td style="color:green">
+
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+            }
+
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentForms)
+            </td>
+
+            <td>
+                @Html.ActionLink("Chi tiết", "DetailsOrderFalse", new { id = item.ID }) |
+                @Html.ActionLink("Sửa", "EditOrderFalse", new { id = item.ID }) |
+                @Html.ActionLink("Xóa", "DeleteOrderFalse", new { id = item.ID })
+            </td>
+        </tr>
+    }
+
+</table>
+Trang @( Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)/ @Model.PageCount
+<div class="MenuTrang">
+    @Html.PagedListPager(Model, page => Url.Action("OrderListAllFalse", new { page, @searchString = @ViewBag.SearchString }))
+</div>
+<style>
+    .MenuTrang li {
+        display: inline;
+    }
+</style>
+
+

@@ -1,0 +1,89 @@
+/* 21. shipping css here */
+
+.shipping_inner {
+	overflow: hidden;
+    border: 1px solid $grey_color;
+}
+.single_shipping{
+    display: flex;
+    align-items: center;
+    width: 20%;
+    float: left;
+    padding: 25px 10px 25px 20px;
+    border-right: 1px solid $grey_color;
+    @media #{$desktop-device}{
+       padding: 25px 10px;
+    }
+    @media #{$tablet-device}{
+        width: 33.33%;
+        border-bottom: 1px solid $grey_color;
+        &:last-child{
+           border-right: 1px solid #ebebeb !important;
+            border-bottom: 0;
+        }
+        &:nth-child(3){
+            border-right: 0;
+        }
+        &:nth-child(4){
+            border-bottom: 0;
+        }
+    }
+    @media #{$large-mobile}{
+        width: 100%;
+        justify-content: center;
+        border-bottom: 1px solid $grey_color;
+        border-right: 0;
+        &:last-child{
+            border-bottom: 0;
+        }
+    }
+    &:last-child{
+        border-right: 0;
+    }
+}
+
+.shipping_icone{
+    margin-right: 15px;
+    @media #{$desktop-device}{
+        margin-right: 7px;
+    }
+    @media #{$large-mobile}{
+        margin-right: 20px;
+    }
+    & img{
+        @media #{$desktop-device}{
+           width: 30px;
+        }
+    }
+}
+.shipping_content{
+    & h4{
+        font-size: 14px;
+        line-height: 18px;
+        text-transform: capitalize;
+        font-weight: 500;
+        margin-bottom: 3px;
+        @media #{$desktop-device}{
+           font-size: 13px;
+        }
+        @media #{$tablet-device}{
+            font-size: 13px;
+        }
+        @media #{$large-mobile}{
+            font-size: 13px;
+        }
+    }
+    & p{
+        font-size: 13px;
+        line-height: 22px;
+        @media #{$desktop-device}{
+            font-size: 13px;
+            line-height: 20px;
+        }
+        
+    }
+}
+
+
+
+

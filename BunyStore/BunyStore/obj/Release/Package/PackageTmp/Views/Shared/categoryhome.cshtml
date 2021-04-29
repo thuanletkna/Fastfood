@@ -1,0 +1,19 @@
+﻿@model List<KetnoiCSDL.EF.ProductCategory>
+<div class="categories_product_area mb-55">
+    <div class="container">
+        <div class="categories_product_inner">
+            @foreach (var item in Model)
+            {
+                <div class="single_categories_product">
+                    <div class="categories_product_content">
+                        <h4><a href="/san-pham/@item.MetaTitle-@item.ID">@item.Name </a></h4>
+                        <p>12 Products</p>
+                    </div>
+                    <div class="categories_product_thumb">
+                        <a href="shop.html"><img src="/assets/home/img/s-product/category1.jpg" alt=""></a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

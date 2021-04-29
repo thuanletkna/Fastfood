@@ -1,0 +1,58 @@
+﻿@model IEnumerable<KetnoiCSDL.EF.Slide>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2 style="text-align:center">DANH SÁCH BANNER SLIDE</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Themslide")
+</p>
+<table class="table"  border="1" style="text-align:center">
+    <tr class="info">
+        <th  style="width:200px">
+            Hình ảnh
+        </th>
+        
+        <th  style="width:200px">
+            Chi tiết
+        </th>
+        
+        <th  style="width:200px">
+            Ngày tạo
+        </th>
+       
+        <th  style="width:200px">
+            Trạng thái
+        </th>
+        <th  style="width:200px"></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            <img style="width:400px;height:200px" src="@Url.Content("" + item.Image)" /> 
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        
+        
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedDate)
+        </td>
+       
+        <td>
+            @Html.DisplayFor(modelItem => item.Status)
+        </td>
+        <td>
+            @Html.ActionLink("Sửa", "Suaslide", new { id=item.ID }) |
+            @Html.ActionLink("Chi tiết", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Xóa", "Xoaslide", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>

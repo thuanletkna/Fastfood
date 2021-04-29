@@ -1,0 +1,254 @@
+﻿@model List<BunyStore.Models.CartItem>
+@{
+    ViewBag.Title = "PaymentNoAccount";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int All = 0;
+}
+
+@section jsFooter{
+    <script>
+        var e = $('#tiente2').val();
+        //lấy ra giá tiền
+        var dai = e.length;
+        var f = new Intl.NumberFormat().format(e.substring(10, dai));
+        $('#tiente2').val(f);
+
+
+        $('.txtQuantity').change(function () {
+            var list = $('.txtQuantity');
+            var cartList = [];
+            $.each(list, function (i, item) {
+                if ($(item).val() < 1) {
+                    alert("Số lượng món phải lớn hơn 1")
+                    $(item).val('1')
+                    cartList.push({
+                        Quantity: $(item).val(),
+                        Product: {
+                            ID: $(item).data('id')
+                        }
+                    });
+                }
+                else if ($(item).val() > 99) {
+                    alert("Số lượng tối đa mỗi món đặt trong 1 lần là 99")
+                    $(item).val('99')
+                    cartList.push({
+                        Quantity: $(item).val(),
+                        Product: {
+                            ID: $(item).data('id')
+                        }
+                    });
+                }
+                else {
+                    cartList.push({
+                        Quantity: $(item).val(),
+                        Product: {
+                            ID: $(item).data('id')
+                        }
+                    });
+                }
+            });
+
+            $.ajax({
+                url: '/Cart/Update',
+                data: { cartModel: JSON.stringify(cartList) },
+                dataType: 'json',
+                type: 'POST',
+                success: function (res) {
+                    if (res.status == true) {
+                        window.location.href = "/thanh-toan-khong-tai-khoan"
+                    }
+                }
+            });
+        });
+
+
+        
+    </script>
+}
+
+
+
+
+
+
+<div class="checkout_page_bg">
+    <div class="container">
+        <div class="Checkout_section">
+            <div class="row">
+                <div class="col-12">
+                    <div class="user-actions">
+                        <h3>
+                            <i class="fa fa-file-o" aria-hidden="true"></i>
+                            Returning customer?
+                            <a class="Returning" href="#checkout_login" data-bs-toggle="collapse" aria-expanded="true">Click here to login</a>
+
+                        </h3>
+                        <div id="checkout_login" class="collapse" data-parent="#accordion">
+                            <div class="checkout_info">
+                                <p>If you have shopped with us before, please enter your details in the boxes below. If you are a new customer please proceed to the Billing & Shipping section.</p>
+                                <form action="#">
+                                    <div class="form_group">
+                                        <label>Username or email <span>*</span></label>
+                                        <input type="text">
+                                    </div>
+                                    <div class="form_group">
+                                        <label>Password  <span>*</span></label>
+                                        <input type="text">
+                                    </div>
+                                    <div class="form_group group_3 ">
+                                        <button type="submit">Login</button>
+                                        <label for="remember_box">
+                                            <input id="remember_box" type="checkbox">
+                                            <span> Remember me </span>
+                                        </label>
+                                    </div>
+                                    <a href="#">Lost your password?</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-actions">
+                        <h3>
+                            <i class="fa fa-file-o" aria-hidden="true"></i>
+                            Returning customer?
+                            <a class="Returning" href="#checkout_coupon" data-bs-toggle="collapse" aria-expanded="true">Click here to enter your code</a>
+
+                        </h3>
+                        <div id="checkout_coupon" class="collapse" data-parent="#accordion">
+                            <div class="checkout_info coupon_info">
+                                <form action="#">
+                                    <input placeholder="Coupon code" type="text">
+                                    <button type="submit">Apply coupon</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="checkout_form">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="checkout_form_left">
+                            @using (Html.BeginForm("PaymentNoAccount", "Cart", FormMethod.Post))
+                            {
+                                <form action="#">
+                                    <h3>Billing Details</h3>
+
+                                    <div class="row">
+
+                                        <div class="col-lg-6 mb-20">
+                                            <label>Họ và Tên <span>*</span></label>
+                                            <input  type="text"  name="shipName" id="input-1" placeholder="Nhập họ tên" required>
+                                        </div>
+
+
+
+                                        <div class="col-12 mb-20">
+                                            <label>Địa chỉ <span>*</span></label>
+                                            <input type="text" name="address" id="input-3" placeholder="Nhập địa chỉ" required>
+                                        </div>
+
+                                        <div class="col-lg-6 mb-20">
+                                            <label>Số điện thoại<span>*</span></label>
+                                            <input onkeydown="return ( event.ctrlKey || event.altKey || (47<event.keyCode && event.keyCode<58 && event.shiftKey==false) || (95<event.keyCode && event.keyCode<106) || (event.keyCode==8) ||(event.keyCode==9)  || (event.keyCode>34 && event.keyCode<40)  || (event.keyCode==46) )"  name="mobile" id="input-2" maxlength="10" minlength="10"  placeholder="Nhập số điện thoại" required>
+
+                                        </div>
+                                        <div class="col-lg-6 mb-20">
+                                            <label>Email <span>*</span></label>
+                                            <input type="email" name="email" id="input-4" placeholder="Nhập email" required>
+                                        </div>
+
+                                        <div class="order_button">
+                                            <button type="submit">Thanh toán</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="checkout_form_right">
+                            <form action="#">
+                                <h3>Your order</h3>
+                                <div class="order_table table-responsive">
+                                    @if (Model.Count > 0)
+                                    {
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Product</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model)
+                                                {
+                                                    <tr>
+                                                        <td> @item.Product.Name <strong> × @item.Quantity</strong></td>
+                                                        <td> @((item.Product.Price.GetValueOrDefault(0) * item.Quantity).ToString("N0"))</td>
+                                                    </tr>
+                                                    All += int.Parse((item.Product.Price * item.Quantity).ToString());
+                                                }
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Cart Subtotal</th>
+                                                    <td>@All VNĐ</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Shipping</th>
+                                                    <td><strong>$5.00</strong></td>
+                                                </tr>
+                                                <tr class="order_total">
+                                                    <th>Order Total</th>
+                                                    <td><strong>@All VNĐ</strong></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    }
+                                </div>
+                                <div class="payment_method" id="infopayment">
+
+                                    @*<div class="panel-default">
+                                            <input id="paypal" name="hinhthuc" type="radio" data-target="createp_account" />
+                                            <label for="payment_defult" data-bs-toggle="collapse" data-bs-target="#collapsedefult" aria-controls="collapsedefult">Thanh toán quaPayPal <img src="assets/img/icon/papyel.png" alt=""></label>
+
+                                            <div id="collapsedefult" class="collapse one" data-parent="#accordion">
+                                                <div class="card-body1">
+                                                    <p>Hệ thống sẽ chuyển qua Website chính thức của Paypal để thực hiện thanh toán</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel-default">
+                                            <input id="payment_defult" name="hinhthuc" type="radio" data-target="createp_account" />
+                                            <label for="payment_defult" data-bs-toggle="collapse" data-bs-target="#collapsedefult" aria-controls="collapsedefult">Thanh toán qua Momo <img src="assets/img/icon/papyel.png" alt=""></label>
+
+                                            <div id="collapsedefult" class="collapse one" data-parent="#accordion">
+                                                <div class="card-body1">
+                                                    <p>Hệ thống sẽ chuyển qua ứng dụng Momo để thực hiện thanh toán</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel-default">
+                                            <input id="momo" name="hinhthuc" type="radio" data-target="createp_account" />
+                                            <label for="payment_defult" data-bs-toggle="collapse" data-bs-target="#collapsedefult" aria-controls="collapsedefult">Thanh toán khi nhận hàng<img src="assets/img/icon/papyel.png" alt=""></label>
+
+                                            <div id="delivety" class="collapse one" data-parent="#accordion">
+                                                <div class="card-body1">
+                                                    <p>Bạn sẽ thanh toán ngay khi nhận được hàng</p>
+                                                </div>
+                                            </div>
+                                        </div>*@
+                                    
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,66 @@
+﻿@model KetnoiCSDL.EF.ProductCategory
+
+@{
+    ViewBag.Title = "XoaloaiSp";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2>XÁC NHẬN XÓA LOẠI SẢN PHẨM</h2>
+<div>
+   
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            TÊN LOẠI SẢN PHẨM
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            MÃ LOẠI SẢN PHẨM
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MetaTitle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MetaTitle)
+        </dd>
+        <dt>
+           Ngày tạo:
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+        <dt>
+            TRẠNG THÁI
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+        <dt>
+          Hiển thị trên trang chủ
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShowOnHome)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="XÓA LOẠI" class="btn btn-default" /> |
+            @Html.ActionLink("TRỞ VỀ DANH SÁCH LOẠI SẢN PHẨM", "ProductCategory")
+        </div>
+    }
+</div>
