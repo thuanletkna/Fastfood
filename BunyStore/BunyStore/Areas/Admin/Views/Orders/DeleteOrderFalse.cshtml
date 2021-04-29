@@ -1,6 +1,6 @@
 ﻿@model KetnoiCSDL.EF.Order
 @{
-    ViewBag.Title = "DeleteOrder";
+    ViewBag.Title = "DeleteOrderFalse";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
@@ -15,7 +15,7 @@
             Mã đơn hàng:
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ID)
+            <span id="ID">@Html.DisplayFor(model => model.ID)</span>
         </dd>
         <dt>
             Tên khách hàng:
@@ -60,27 +60,40 @@
 
     </dl>
 
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
+    @*@using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()*@
 
-        <div>
-            <input id="delete" type="submit" value="XÓA ĐƠN HÀNG" class="btn btn-danger" /> |
-            @Html.ActionLink("Quay lại", "OrderListAllFalse", new { page = 1 }, new { @class = "btn btn-info" })
-        </div>
-    }
+    <div>
+        <input id="delete" type="button" value="Xóa đơn hàng" class="btn btn-danger" /> |
+        @Html.ActionLink("Quay lại", "OrderListAllFalse", new { page = 1 }, new { @class = "btn btn-info" })
+    </div>
+    @*}*@
 </div>
 
 @section jsFooter
 {
     <script>
-        $("#delete").on('click', function () {
+        $("#delete").click(function () {
+            var id = $("#ID").text();
             var a = confirm("Bạn có chắc chắn muốn xóa?")
-            var link = window.location.href.split("/")
             if (a == true) {
-                alert("Xóa thành công")
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/Orders/AccessDeleteFalse",
+                    data: { id: id },
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.status == true) {
+                            window.location.href = "/Admin/Orders/OrderListAllFalse";
+                        }
+                    }
+                })
+
             }
         });
     </script>
 
 }
+

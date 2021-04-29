@@ -147,7 +147,7 @@
         @Html.AntiForgeryToken()
         <div>
             <input id="save" type="submit" value="Save" class="btn btn-default" />
-            @Html.ActionLink("Quay lại", "OrderListAllFalse", new { page = 1 }, new { @class = "btn btn-info" })
+            @Html.ActionLink("Quay lại", "OrderListAllCheck", new { page = 1 }, new { @class = "btn btn-info" })
         </div>
     }
 </div>
@@ -206,3 +206,4 @@
 
     </script>
 }
+

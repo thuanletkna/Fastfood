@@ -61,13 +61,13 @@
     </dl>
 
     @*@using (Html.BeginForm())
-        {
-            @Html.AntiForgeryToken()*@
+    {
+        @Html.AntiForgeryToken()*@
 
-    <div>
-        <input id="delete" type="button" value="Xóa đơn hàng" class="btn btn-danger" /> |
-        @Html.ActionLink("Quay lại", "OrderListAllTrue", new { page = 1 }, new { @class = "btn btn-info" })
-    </div>
+        <div>
+            <input id="delete" type="button" value="Xóa đơn hàng" class="btn btn-danger" /> |
+            @Html.ActionLink("Quay lại", "OrderListAllCheck", new { page = 1 }, new { @class = "btn btn-info" })
+        </div>
     @*}*@
 </div>
 
@@ -78,19 +78,19 @@
             var id = $("#ID").text();
             var a = confirm("Bạn có chắc chắn muốn xóa?")
             if (a == true) {
-
+                
                 $.ajax({
                     type: "POST",
-                    url: "/Admin/Orders/AccessDeleteTrue",
+                    url: "/Admin/Orders/AccessDeleteCheck",
                     data: { id: id },
                     dataType: 'json',
-                    success: function (res) {
+                    success: function(res) {
                         if (res.status == true) {
-                            window.location.href = "/Admin/Orders/OrderListAllTrue";
+                            window.location.href = "/Admin/Orders/OrderListAllCheck";
                         }
                     }
                 })
-
+                
             }
         });
     </script>
