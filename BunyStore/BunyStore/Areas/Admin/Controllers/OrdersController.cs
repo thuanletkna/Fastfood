@@ -69,8 +69,8 @@ namespace BunyStore.Areas.Admin.Controllers
             return View(order);
         }
 
-        [HttpPost, ActionName("DeleteOrderFalse")]
-        public ActionResult AccessDeleteFalse(int id)
+        [HttpPost]
+        public JsonResult AccessDeleteFalse(int id)
         {
             Order order = db.Orders.SingleOrDefault(n => n.ID == id);
             ViewBag.ID = order.ID;
@@ -83,7 +83,7 @@ namespace BunyStore.Areas.Admin.Controllers
             {
                 db.Orders.Remove(order);
                 db.SaveChanges();
-                return RedirectToAction("OrderListAllFalse", 1);
+                return Json(new { status = true });
             }
         }
 
@@ -112,7 +112,7 @@ namespace BunyStore.Areas.Admin.Controllers
             }
             else
             {
-                if(status != null)
+                if (status != null)
                 {
                     ordertemp.Status = status;
                     ordertemp.CreatedDate = DateTime.Now;
@@ -167,8 +167,8 @@ namespace BunyStore.Areas.Admin.Controllers
             return View(order);
         }
 
-        [HttpPost, ActionName("DeleteOrderTrue")]
-        public ActionResult AccessDeleteTrue(int id)
+        [HttpPost]
+        public JsonResult AccessDeleteTrue(int id)
         {
             Order order = db.Orders.SingleOrDefault(n => n.ID == id);
             ViewBag.ID = order.ID;
@@ -181,11 +181,11 @@ namespace BunyStore.Areas.Admin.Controllers
             {
                 db.Orders.Remove(order);
                 db.SaveChanges();
-                return RedirectToAction("OrderListAllTrue", 1);
+                return Json(new { status = true });
             }
         }
 
-        //SỬA LOẠI SP
+        //Sửa đơn hàng
         [HttpGet]
         public ActionResult EditOrderTrue(int id)
         {
@@ -219,6 +219,104 @@ namespace BunyStore.Areas.Admin.Controllers
                 }
 
                 return RedirectToAction("OrderListAllTrue", 1);
+            }
+        }
+
+        //---------------------------------------------------------------------------------------------
+
+        //DANH SÁCH ĐƠN HÀNG ĐANG CHỜ XỬ LÝ
+        public ActionResult OrderListAllCheck(string searchString, int? page)
+        {
+            int pageNumber = (page ?? 1);
+            int pageSize = 7;
+            var dao = new OrderDao();
+            var model = dao.ListAllPagingCheck(searchString, pageNumber, pageSize);
+
+            ViewBag.SearchString = searchString;
+            return View(model);
+        }
+
+
+        //CHI TIẾT ĐƠN HÀNG
+        [HttpGet]
+        public ActionResult DetailsOrderCheck(int id)
+        {
+            Order order = db.Orders.SingleOrDefault(n => n.ID == id);
+            ViewBag.ID = order.ID;
+            if (order == null)
+            {
+                Response.StatusCode = 404;
+                return null;
+            }
+            return View(order);
+        }
+
+        //XÓA ĐƠN HÀNG
+        [HttpGet]
+        public ActionResult DeleteOrderCheck(int id)
+        {
+            Order order = db.Orders.SingleOrDefault(n => n.ID == id);
+            ViewBag.ID = order.ID;
+            if (order == null)
+            {
+                Response.StatusCode = 404;
+                return null;
+            }
+            return View(order);
+        }
+
+        [HttpPost]
+        public JsonResult AccessDeleteCheck(int id)
+        {
+            Order order = db.Orders.SingleOrDefault(n => n.ID == id);
+            ViewBag.ID = order.ID;
+            if (order == null)
+            {
+                Response.StatusCode = 404;
+                return null;
+            }
+            else
+            {
+                db.Orders.Remove(order);
+                db.SaveChanges();
+                return Json(new { status = true });
+            }
+        }
+
+        //Sửa đơn hàng
+        [HttpGet]
+        public ActionResult EditOrderCheck(int id)
+        {
+
+            Order order = db.Orders.SingleOrDefault(n => n.ID == id);
+            if (order == null)
+            {
+                Response.StatusCode = 404;
+                return null;
+            }
+            return View(order);
+        }
+
+        [HttpPost]
+        public ActionResult EditOrderCheck(int id, string status)
+        {
+            var ordertemp = db.Orders.Where(p => p.ID == id).SingleOrDefault();
+            if (ordertemp == null)
+            {
+                Response.StatusCode = 404;
+                return null;
+            }
+            else
+            {
+                if (status != null)
+                {
+                    ordertemp.Status = status;
+                    ordertemp.CreatedDate = DateTime.Now;
+                    db.Orders.AddOrUpdate(ordertemp);
+                    db.SaveChanges();
+                }
+
+                return RedirectToAction("OrderListAllCheck", 1);
             }
         }
     }

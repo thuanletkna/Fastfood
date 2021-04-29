@@ -74,6 +74,12 @@
             @if (Model.Status == "Đang giao hàng")
             {
                 <form style="margin:0; max-width:160px">
+                    <div class="radiobtn" id="btnchoxuly">
+                        <input type="radio" id="choxuly"
+                               name="drone" value="choxuly" />
+                        <label for="choxuly">Chờ xử lý</label>
+                    </div>
+
                     <div class="radiobtn" id="btndagiao">
                         <input type="radio" id="dagiao"
                                name="drone" value="dagiao" />
@@ -85,14 +91,44 @@
                                name="drone" value="danggiao" checked />
                         <label for="danggiao">Đang giao</label>
                     </div>
+
+                     
+                </form>
+            }
+            else if (Model.Status == "Đã giao hàng")
+            {
+                <form style="margin:0; max-width:160px">
+                    <div class="radiobtn" id="btnchoxuly">
+                        <input type="radio" id="choxuly"
+                               name="drone" value="choxuly" />
+                        <label for="choxuly">Chờ xử lý</label>
+                    </div>
+
+                    <div class="radiobtn" id="btndagiao">
+                        <input type="radio" id="dagiao"
+                               name="drone" value="dagiao" checked />
+                        <label for="dagiao">Đã giao</label>
+                    </div>
+
+                    <div class="radiobtn" id="btndanggiao">
+                        <input type="radio" id="danggiao"
+                               name="drone" value="danggiao" />
+                        <label for="danggiao">Đang giao</label>
+                    </div>
                 </form>
             }
             else
             {
                 <form style="margin:0; max-width:160px">
+                    <div class="radiobtn" id="btnchoxuly">
+                        <input type="radio" id="choxuly"
+                               name="drone" value="choxuly" checked/>
+                        <label for="choxuly">Chờ xử lý</label>
+                    </div>
+
                     <div class="radiobtn" id="btndagiao">
                         <input type="radio" id="dagiao"
-                               name="drone" value="dagiao" checked />
+                               name="drone" value="dagiao"/>
                         <label for="dagiao">Đã giao</label>
                     </div>
 
@@ -124,6 +160,8 @@
         var danggiao = $("#btndanggiao").val();
         //giá trị của id dagiao
         var dagiao = $("#btndagiao").val();
+        //giá trị của id choxyly
+        var choxuly = $("#btnchoxuly").val();
         //tình trang don hang
         //Vì đang ở trang chưa xử lý nên giá trị mặc định sẽ là Đang giao hàng
         var tinhtrang = "";
@@ -147,6 +185,10 @@
 
         $("#btndagiao").click(function () {
             tinhtrang = "Đã giao hàng"
+        });
+
+        $("#btnchoxuly").click(function () {
+            tinhtrang = "Chờ xử lý"
         });
 
         $("#save").click(function () {

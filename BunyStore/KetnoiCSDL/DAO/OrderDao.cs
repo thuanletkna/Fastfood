@@ -64,6 +64,18 @@ namespace KetnoiCSDL.DAO
             return model.OrderByDescending(x => x.CreatedDate).ToPagedList(page, pageSize);
         }
 
+        //XỬ LÝ DANH SÁCH TẤT CẢ CÁC ĐƠN HÀNG ĐANG GIAO
+        public IEnumerable<Order> ListAllPagingCheck(string searchString, int page, int pageSize)
+        {
+            IQueryable<Order> model = db.Orders.Where(x => x.Status == "Chờ xử lý");
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                model = model.Where(x => x.ID.ToString().Contains(searchString) || x.ShipName.Contains(searchString) || x.ShipEmail.Contains(searchString) || x.ShipMobile.ToString().Contains(searchString));
+            }
+
+            return model.OrderByDescending(x => x.CreatedDate).ToPagedList(page, pageSize);
+        }
+
         public long Insert(Order order)
         {
             db.Orders.Add(order);
