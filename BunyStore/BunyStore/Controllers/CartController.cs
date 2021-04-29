@@ -88,7 +88,7 @@ namespace BunyStore.Controllers
         }
 
         //thêm item vào giỏ hàng và trả về trang loại hiện tại
-        public ActionResult AddItem_Catagory(long productId, int quantity , int page)
+        public ActionResult AddItem_Catagory(long productId, int quantity, int page)
         {
             var product = new ProductDao().ViewDetail(productId);
             var cart = Session[CartSession];
@@ -235,14 +235,14 @@ namespace BunyStore.Controllers
             if (cart != null)
             {
                 list = (List<CartItem>)cart;
-            }   
+            }
             return View(list);
         }
 
 
         [HttpPost]
         public ActionResult PaymentNoAccount(string shipName, string mobile, string address, string email)
-        {            
+        {
             Common.CommonConstants.Count = 0;
             //var user = new User();
             //user.Name = shipName;
@@ -255,21 +255,24 @@ namespace BunyStore.Controllers
             temp.Phone = mobile;
             temp.Email = email;
             temp.Address = address;
-            
+
             CommonConstants.CustomerTemp = temp;
             return RedirectToAction("PaymentWithAccount", temp);
         }
-        
+
 
         //Trang thanh toán bằng tài khoản và trang hiển thị thông tin đơn hàng gộp lại thành 1
         public ActionResult PaymentWithAccount(CustomerModel user)
         {
             //CommonConstants.linkPayment = Request.Url.Segments[3].ToString()+"/"+Request.Url.Query.ToString();
+
+            //Lấy ra session chứa thông tin người dùng
             var user_temp = (BunyStore.Common.UserLogin)Session[BunyStore.Common.CommonConstants.USER_SESSION];
             CustomerModel temp = new CustomerModel();
-            if (user_temp != null)
+
+            //Trường hợp server trả null thì gán giá trị bằng với session khởi tạo
+            if (user.shipName == null || user.Phone == null || user.Email == null || user.Address == null || user.DistrictID == null || user.ProvinceID == null || user.PrecinctID == null)
             {
-                
                 temp.shipName = user_temp.Name;
                 temp.Phone = user_temp.Phone;
                 temp.Email = user_temp.Email;
@@ -277,25 +280,25 @@ namespace BunyStore.Controllers
                 temp.DistrictID = user_temp.DistrictID;
                 temp.ProvinceID = user_temp.ProvinceID;
                 temp.PrecinctID = user_temp.PrecinctID;
-                CommonConstants.CustomerTemp = temp;
             }
-
+            //Ngược lại gán giá trị bằng user lấy từ server
             else
             {
                 temp.shipName = user.shipName;
                 temp.Phone = user.Phone;
                 temp.Email = user.Email;
                 temp.Address = user.Address;
-                temp.DistrictID = user_temp.DistrictID;
-                temp.ProvinceID = user_temp.ProvinceID;
-                temp.PrecinctID = user_temp.PrecinctID;
-                CommonConstants.CustomerTemp = temp;
+                temp.DistrictID = user.DistrictID;
+                temp.ProvinceID = user.ProvinceID;
+                temp.PrecinctID = user.PrecinctID;
             }
-            
-            
-            return View(temp);
+
+
+            CommonConstants.CustomerTemp = temp;
+
+            return PartialView("PaymentWithAccount", temp);
         }
-        
+
         public ActionResult Success()
         {
             return View();

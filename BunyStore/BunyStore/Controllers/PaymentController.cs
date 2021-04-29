@@ -12,6 +12,7 @@ using BunyStore.MomoAPI;
 using System.Configuration;
 using Newtonsoft.Json.Linq;
 using System.Data.Entity.Migrations;
+using BunyStore.Common;
 
 namespace BunyStore.Controllers
 {
@@ -24,10 +25,24 @@ namespace BunyStore.Controllers
         //public static Customer temp;
         ////// GET: Paypal
 
+
+
         //tạm tắt
         public ActionResult PaymentWithPaypal(CustomerModel user)
         {
             //getting the apiContext as earlier
+            //CustomerModel temp = new CustomerModel();
+            //if (user.shipName != null)
+            //{
+            //    temp.shipName = user.shipName;
+            //    temp.Phone = user.Phone;
+            //    temp.Email = user.Email;
+            //    temp.Address = user.Address;
+            //    temp.DistrictID = user.DistrictID;
+            //    temp.ProvinceID = user.ProvinceID;
+            //    temp.PrecinctID = user.PrecinctID;
+            //    CommonConstants.CustomerTemp = temp;
+            //}
             APIContext apiContext = PaymentConfiguration.GetAPIContext();
             try
             {
@@ -103,7 +118,7 @@ namespace BunyStore.Controllers
             order.ShipPrecinct = Common.CommonConstants.CustomerTemp.PrecinctID;
             order.ShipProvince = Common.CommonConstants.CustomerTemp.ProvinceID;
             order.ShipDistrict = Common.CommonConstants.CustomerTemp.DistrictID;
-            order.Status = "Đang giao hàng";
+            order.Status = "Chờ xử lý";
             order.PaymentForms = "Paypal";
             try
             {
@@ -157,93 +172,6 @@ namespace BunyStore.Controllers
         }
 
 
-        //Tùy theo máy
-        private Payment CreatePayment(APIContext apiContext, string redirectUrl)
-        {
-            var itemList = new ItemList() { items = new List<Item>() };
-            var cart = Session[CartSession];
-            var listcart = new List<CartItem>();
-            listcart = (List<CartItem>)cart;
-
-            double tong = 0; // giá trị của tổng hóa đơn
-            string temp = ""; //  chuỗi sau khi đã xử lý hoàn chỉnh
-            string str1 = "", str2 = ""; // 2 chuỗi con 
-            int dem = 0; // biến tìm ra dấu,
-
-            //Các giá trị bao gồm danh sách sản phẩm, thông tin đơn hàng
-            //Sẽ được thay đổi bằng hành vi thao tác mua hàng trên website
-            foreach (var item in listcart)
-            {
-                temp = (float.Parse(item.Product.Price.ToString()) / 23000).ToString();// chuyển từ VND->USD
-                temp = Math.Round(Convert.ToDecimal(temp), 2).ToString(); // làm tròn lấy 2 số thập phân sau dấu phẩy
-
-                //Tùy máy
-                //dem = temp.IndexOf(","); // tìm kiếm vị trí dấu phẩy
-                //str1 = temp.Substring(0, dem);// tách chuỗi phía trước dấu phẩy
-                //str2 = temp.Substring(dem + 1, temp.Length - str1.Length -1); //tách chuỗi phía sau dấu phẩy
-                //temp = str1 + "." + str2; // ghép chuỗi
-
-
-                itemList.items.Add(new Item()
-                {
-                    //Thông tin đơn hàng
-                    name = item.Product.Name + " x " + item.Quantity.ToString(),
-                    currency = "USD",
-                    price = temp,
-                    quantity = item.Quantity.ToString(),
-                });
-                tong += ((double.Parse(temp) * double.Parse(item.Quantity.ToString())));
-                tong = double.Parse(Math.Round(Convert.ToDecimal(tong), 2).ToString());
-
-                //Tùy máy
-                //str1 = tong.ToString().Substring(0, dem);// tách chuỗi phía trước dấu phẩy
-                //str2 = tong.ToString().Substring(dem + 1, tong.ToString().Length - str1.Length - 1); //tách chuỗi phía sau dấu phẩy
-                //temp = str1 + "." + str2; // ghép chuỗi
-            }
-
-            //Hình thức thanh toán qua paypal
-            var payer = new Payer() { payment_method = "paypal" };
-            // Configure Redirect Urls here with RedirectUrls object
-            var redirUrls = new RedirectUrls()
-            {
-                cancel_url = redirectUrl,
-                return_url = redirectUrl
-            };
-            //các thông tin trong đơn hàng
-            var details = new Details()
-            {
-                tax = "0",
-                shipping = "0",
-                subtotal = tong.ToString() // tổng
-            };
-            //Đơn vị tiền tệ và tổng đơn hàng cần thanh toán
-            var amount = new Amount()
-            {
-                currency = "USD",
-                total = tong.ToString(), // Total must be equal to sum of shipping, tax and subtotal. nếu không được mở khóa phần trên sửa tong thành temp
-                details = details
-            };
-            var transactionList = new List<Transaction>();
-            //Tất cả thông tin thanh toán cần đưa vào transaction
-            transactionList.Add(new Transaction()
-            {
-                description = "Thông tin sản phẩm",
-                invoice_number = Guid.NewGuid().ToString(),
-                amount = amount,
-                item_list = itemList
-            });
-            this.payment = new Payment()
-            {
-                intent = "sale",
-                payer = payer,
-                transactions = transactionList,
-                redirect_urls = redirUrls
-            };
-            // Create a payment using a APIContext
-            return this.payment.Create(apiContext);
-        }
-
-
         ////Tùy theo máy
         //private Payment CreatePayment(APIContext apiContext, string redirectUrl)
         //{
@@ -261,12 +189,16 @@ namespace BunyStore.Controllers
         //    //Sẽ được thay đổi bằng hành vi thao tác mua hàng trên website
         //    foreach (var item in listcart)
         //    {
-        //        temp = (float.Parse(item.Product.Price.ToString())/23000).ToString();// chuyển từ VND->USD
-        //        temp = Math.Round(Convert.ToDecimal(temp),2).ToString(); // làm tròn lấy 2 số thập phân sau dấu phẩy
-        //        dem = temp.IndexOf(","); // tìm kiếm vị trí dấu phẩy
-        //        str1 = temp.Substring(0, dem);// tách chuỗi phía trước dấu phẩy
-        //        str2 = temp.Substring(dem + 1, temp.Length - str1.Length -1); //tách chuỗi phía sau dấu phẩy
-        //        temp = str1 + "." + str2; // ghép chuỗi
+        //        temp = (float.Parse(item.Product.Price.ToString()) / 23000).ToString();// chuyển từ VND->USD
+        //        temp = Math.Round(Convert.ToDecimal(temp), 2).ToString(); // làm tròn lấy 2 số thập phân sau dấu phẩy
+
+        //        //Tùy máy
+        //        //dem = temp.IndexOf(","); // tìm kiếm vị trí dấu phẩy
+        //        //str1 = temp.Substring(0, dem);// tách chuỗi phía trước dấu phẩy
+        //        //str2 = temp.Substring(dem + 1, temp.Length - str1.Length -1); //tách chuỗi phía sau dấu phẩy
+        //        //temp = str1 + "." + str2; // ghép chuỗi
+
+
         //        itemList.items.Add(new Item()
         //        {
         //            //Thông tin đơn hàng
@@ -275,14 +207,14 @@ namespace BunyStore.Controllers
         //            price = temp,
         //            quantity = item.Quantity.ToString(),
         //        });
-        //        tong += ((double.Parse(item.Product.Price.ToString()) * double.Parse(item.Quantity.ToString())) / 23000);
+        //        tong += ((double.Parse(temp) * double.Parse(item.Quantity.ToString())));
         //        tong = double.Parse(Math.Round(Convert.ToDecimal(tong), 2).ToString());
-        //        dem = tong.ToString().IndexOf(",");
-        //        str1 = tong.ToString().Substring(0, dem);// tách chuỗi phía trước dấu phẩy
-        //        str2 = tong.ToString().Substring(dem + 1, tong.ToString().Length - str1.Length - 1); //tách chuỗi phía sau dấu phẩy
-        //        temp = str1 + "." + str2; // ghép chuỗi
-        //    }
 
+        //        //Tùy máy
+        //        //str1 = tong.ToString().Substring(0, dem);// tách chuỗi phía trước dấu phẩy
+        //        //str2 = tong.ToString().Substring(dem + 1, tong.ToString().Length - str1.Length - 1); //tách chuỗi phía sau dấu phẩy
+        //        //temp = str1 + "." + str2; // ghép chuỗi
+        //    }
 
         //    //Hình thức thanh toán qua paypal
         //    var payer = new Payer() { payment_method = "paypal" };
@@ -297,13 +229,13 @@ namespace BunyStore.Controllers
         //    {
         //        tax = "0",
         //        shipping = "0",
-        //        subtotal = temp // tổng
+        //        subtotal = tong.ToString() // tổng
         //    };
         //    //Đơn vị tiền tệ và tổng đơn hàng cần thanh toán
         //    var amount = new Amount()
         //    {
         //        currency = "USD",
-        //        total = temp, // Total must be equal to sum of shipping, tax and subtotal.
+        //        total = tong.ToString(), // Total must be equal to sum of shipping, tax and subtotal. nếu không được mở khóa phần trên sửa tong thành temp
         //        details = details
         //    };
         //    var transactionList = new List<Transaction>();
@@ -325,6 +257,89 @@ namespace BunyStore.Controllers
         //    // Create a payment using a APIContext
         //    return this.payment.Create(apiContext);
         //}
+
+
+        //Tùy theo máy
+        private Payment CreatePayment(APIContext apiContext, string redirectUrl)
+        {
+            var itemList = new ItemList() { items = new List<Item>() };
+            var cart = Session[CartSession];
+            var listcart = new List<CartItem>();
+            listcart = (List<CartItem>)cart;
+
+            double tong = 0; // giá trị của tổng hóa đơn
+            string temp = ""; //  chuỗi sau khi đã xử lý hoàn chỉnh
+            string str1 = "", str2 = ""; // 2 chuỗi con 
+            int dem = 0; // biến tìm ra dấu,
+
+            //Các giá trị bao gồm danh sách sản phẩm, thông tin đơn hàng
+            //Sẽ được thay đổi bằng hành vi thao tác mua hàng trên website
+            foreach (var item in listcart)
+            {
+                temp = (float.Parse(item.Product.Price.ToString()) / 23000).ToString();// chuyển từ VND->USD
+                temp = Math.Round(Convert.ToDecimal(temp), 2).ToString(); // làm tròn lấy 2 số thập phân sau dấu phẩy
+                dem = temp.IndexOf(","); // tìm kiếm vị trí dấu phẩy
+                str1 = temp.Substring(0, dem);// tách chuỗi phía trước dấu phẩy
+                str2 = temp.Substring(dem + 1, temp.Length - str1.Length - 1); //tách chuỗi phía sau dấu phẩy
+                temp = str1 + "." + str2; // ghép chuỗi
+                itemList.items.Add(new Item()
+                {
+                    //Thông tin đơn hàng
+                    name = item.Product.Name + " x " + item.Quantity.ToString(),
+                    currency = "USD",
+                    price = temp,
+                    quantity = item.Quantity.ToString(),
+                });
+                tong += ((double.Parse(item.Product.Price.ToString()) * double.Parse(item.Quantity.ToString())) / 23000);
+                tong = double.Parse(Math.Round(Convert.ToDecimal(tong), 2).ToString());
+                dem = tong.ToString().IndexOf(",");
+                str1 = tong.ToString().Substring(0, dem);// tách chuỗi phía trước dấu phẩy
+                str2 = tong.ToString().Substring(dem + 1, tong.ToString().Length - str1.Length - 1); //tách chuỗi phía sau dấu phẩy
+                temp = str1 + "." + str2; // ghép chuỗi
+            }
+
+
+            //Hình thức thanh toán qua paypal
+            var payer = new Payer() { payment_method = "paypal" };
+            // Configure Redirect Urls here with RedirectUrls object
+            var redirUrls = new RedirectUrls()
+            {
+                cancel_url = redirectUrl,
+                return_url = redirectUrl
+            };
+            //các thông tin trong đơn hàng
+            var details = new Details()
+            {
+                tax = "0",
+                shipping = "0",
+                subtotal = temp // tổng
+            };
+            //Đơn vị tiền tệ và tổng đơn hàng cần thanh toán
+            var amount = new Amount()
+            {
+                currency = "USD",
+                total = temp, // Total must be equal to sum of shipping, tax and subtotal.
+                details = details
+            };
+            var transactionList = new List<Transaction>();
+            //Tất cả thông tin thanh toán cần đưa vào transaction
+            transactionList.Add(new Transaction()
+            {
+                description = "Thông tin sản phẩm",
+                invoice_number = Guid.NewGuid().ToString(),
+                amount = amount,
+                item_list = itemList
+            });
+            this.payment = new Payment()
+            {
+                intent = "sale",
+                payer = payer,
+                transactions = transactionList,
+                redirect_urls = redirUrls
+            };
+            // Create a payment using a APIContext
+            return this.payment.Create(apiContext);
+        }
 
 
         private Payment ExecutePayment(APIContext apiContext, string payerId, string paymentId)
@@ -428,7 +443,7 @@ namespace BunyStore.Controllers
                 order.ShipPrecinct = Common.CommonConstants.CustomerTemp.PrecinctID;
                 order.ShipProvince = Common.CommonConstants.CustomerTemp.ProvinceID;
                 order.ShipDistrict = Common.CommonConstants.CustomerTemp.DistrictID;
-                order.Status = "Đang giao hàng";
+                order.Status = "Chờ xử lý";
                 order.PaymentForms = "Momo";
                 try
                 {
@@ -536,7 +551,7 @@ namespace BunyStore.Controllers
             order.ShipPrecinct = Common.CommonConstants.CustomerTemp.PrecinctID;
             order.ShipProvince = Common.CommonConstants.CustomerTemp.ProvinceID;
             order.ShipDistrict = Common.CommonConstants.CustomerTemp.DistrictID;
-            order.Status = "Đang giao hàng";
+            order.Status = "Chờ xử lý";
             order.PaymentForms = "Thanh toán khi nhận hàng";
             try
             {

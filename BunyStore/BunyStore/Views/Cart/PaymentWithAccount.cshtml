@@ -13,7 +13,7 @@
         <div class="Checkout_section">
             <div class="row">
                 <div class="col-12">
-                    @*<div class="user-actions">
+                    <div class="user-actions">
                         <h3>
                             <i class="fa fa-file-o" aria-hidden="true"></i>
                             Returning customer?
@@ -43,19 +43,19 @@
                                 </form>
                             </div>
                         </div>
-                    </div>*@
+                    </div>
                     <div class="user-actions">
                         <h3>
                             <i class="fa fa-file-o" aria-hidden="true"></i>
-                            Bạn có mã giảm giá?
-                            <a class="Returning" href="#checkout_coupon" data-bs-toggle="collapse" aria-expanded="true">Click tại đây để nhập mã giảm giá</a>
+                            Returning customer?
+                            <a class="Returning" href="#checkout_coupon" data-bs-toggle="collapse" aria-expanded="true">Click here to enter your code</a>
 
                         </h3>
                         <div id="checkout_coupon" class="collapse" data-parent="#accordion">
                             <div class="checkout_info coupon_info">
                                 <form action="#">
                                     <input placeholder="Coupon code" type="text">
-                                    <button type="submit">Áp dụng</button>
+                                    <button type="submit">Apply coupon</button>
                                 </form>
                             </div>
                         </div>
@@ -69,28 +69,98 @@
                             @using (Html.BeginForm("PaymentNoAccount", "Cart", FormMethod.Post))
                             {
                                 <form action="#">
-                                    <h3>THÔNG TIN KHÁCH HÀNG</h3>
+                                    <h3>Billing Details</h3>
 
                                     <div class="row">
 
-                                        <div class="col-lg-6 mb-20">
-                                            Tên người nhận: <span id="txtName">@Model.shipName</span>
+                                        <div class="col-lg-12 mb-20">
+                                            <p>Tên người nhận: <span id="txtName">@Model.shipName</span></p>
                                         </div>
-
-
 
                                         <div class="col-12 mb-20">
-                                            <p>Địa chỉ: <span id="txtAddress">@Model.Address  @Model.PrecinctID  @Model.DistrictID  @Model.ProvinceID</span></p>
+                                            <p>Địa chỉ: <span id="txtAddress">@Model.Address,  @Model.PrecinctID,  @Model.DistrictID,  @Model.ProvinceID</span></p>
                                         </div>
 
-                                        <div class="col-lg-6 mb-20">
+                                        <div class="col-lg-12 mb-20">
                                             <p>Số điện thoại: <span id="txtMobile">@Model.Phone</span></p>
                                         </div>
-                                        <div class="col-lg-6 mb-20">
+                                        <div class="col-lg-12 mb-20">
                                             <p>Email: <span id="txtEmail">@Model.Email</span></p>
                                         </div>
 
+                                        <div class="modal fade" id="myModal">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1>Chỉnh sửa địa chỉ</h1>
+                                                    </div>
 
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                            @Html.LabelFor(model => model.shipName, htmlAttributes: new { @class = "control-label col-md-3" })
+
+                                                            @Html.TextBoxFor(model => model.shipName, new { htmlAttributes = new { @class = "form-control" } })
+                                                            @Html.ValidationMessageFor(model => model.shipName, "", new { @class = "text-danger" })
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-3" })
+
+                                                            @Html.TextBoxFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
+                                                            @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-3" })
+
+                                                            @Html.TextBoxFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                                        </div>
+
+
+                                                        <div class="form-group">
+                                                            @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-3" })
+
+                                                            @Html.TextBoxFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                                                            @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                                                        </div>
+                                                        <div>
+                                                            @Html.LabelFor(model => model.ProvinceID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                            <div>
+                                                                @Html.DropDownListFor(model => Model.ProvinceID, new SelectList(new string[] { }), new { @class = "form-control", @id = "ddlProvince" })
+                                                                @Html.ValidationMessageFor(model => model.ProvinceID, "", new { @class = "text-danger" })
+                                                            </div>
+                                                        </div>
+
+                                                        <div>
+                                                            @Html.LabelFor(model => model.DistrictID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                            <div>
+                                                                @Html.DropDownList("DistrictID", new SelectList(new string[] { }), new { @class = "form-control", @id = "ddlDistrict" })
+                                                                @Html.ValidationMessageFor(model => model.DistrictID, "", new { @class = "text-danger" })
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            @Html.LabelFor(model => model.PrecinctID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                            <div>
+                                                                @Html.DropDownList("PrecinctID", new SelectList(new string[] { }), new { @class = "form-control", @id = "ddlPrecinctID" })
+                                                                @Html.ValidationMessageFor(model => model.PrecinctID, "", new { @class = "text-danger" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                <input type="button" id="save" style="background-color:green" class="btn btn-success" data-dismiss="modal" value="Lưu">
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <input type="button" style="background-color:red" class="btn btn-danger" data-dismiss="modal" value="Thoát">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a href="#" type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal" style="float:right">Chỉnh sửa thông tin người dùng</a>
                                     </div>
                                 </form>
                             }
@@ -99,7 +169,7 @@
                     <div class="col-lg-6 col-md-6">
                         <div class="checkout_form_right">
                             <form action="#">
-                                <h3>THÔNG TIN ĐƠN HÀNG</h3>
+                                <h3>Your order</h3>
                                 <div class="order_table table-responsive">
 
                                     @if (listcart.Count > 0)
@@ -107,8 +177,8 @@
                                         <table>
                                             <thead>
                                                 <tr>
-                                                    <th>Sản phẩm</th>
-                                                    <th>Giá</th>
+                                                    <th>Product</th>
+                                                    <th>Total</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -116,22 +186,22 @@
                                                 {
                                                     <tr>
                                                         <td> @item.Product.Name <strong> × @item.Quantity</strong></td>
-                                                        <td> @((item.Product.Price.GetValueOrDefault(0) * item.Quantity).ToString("N0"))</td>
+                                                        <td> @((item.Product.Price.GetValueOrDefault(0) * item.Quantity).ToString("N0")) VNĐ</td>
                                                     </tr>
                                                     All += int.Parse((item.Product.Price * item.Quantity).ToString());
                                                 }
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th>Tổng tiền</th>
+                                                    <th>Cart Subtotal</th>
                                                     <td>@All VNĐ</td>
                                                 </tr>
-                                                <tr>
-                                                    <th>Phí ship</th>
-                                                    <td><strong>0 VNĐ</strong></td>
-                                                </tr>
+                                                @*<tr>
+                                                        <th>Shipping</th>
+                                                        <td><strong>$5.00</strong></td>
+                                                    </tr>*@
                                                 <tr class="order_total">
-                                                    <th>Số tiền cần thanh toán</th>
+                                                    <th>Order Total</th>
                                                     <td><strong>@All VNĐ</strong></td>
                                                 </tr>
                                             </tfoot>
@@ -142,7 +212,7 @@
 
                                     <div class="panel-default">
                                         <input id="paypal" name="hinhthuc" type="radio" data-target="createp_account" />
-                                        <label for="payment_defult" data-bs-toggle="collapse" data-bs-target="#collapsedefult" aria-controls="collapsedefult">Thanh toán qua PayPal <img src="assets/img/icon/papyel.png" alt=""></label>
+                                        <label for="payment_defult" data-bs-toggle="collapse" data-bs-target="#collapsedefult" aria-controls="collapsedefult">Thanh toán qua Paypal <img src="assets/img/icon/papyel.png" alt=""></label>
 
                                         <div id="collapsedefult" class="collapse one" data-parent="#accordion">
                                             <div class="card-body1">
@@ -180,7 +250,7 @@
                                                 @Html.ActionLink("Tiếp tục mua hàng", "Index", "Home", null, new { @class = "btn btn-info form-control" })
                                             </li>
                                             <li>
-                                                @Html.ActionLink("Thanh toán Paypal", "PaymentWithPaypal", "Payment", Model, new { @class = "btn btn-success form-control", @id = "payment" })
+                                                @Html.ActionLink("Thanh toán Paypal", "PaymentWithPaypal", "Payment", "", new { @class = "btn btn-success form-control disabled", @id = "payment" })
                                             </li>
                                         </ul>
 
@@ -196,13 +266,105 @@
 </div>
 @section jsFooter{
     @*<script src="~/assets/client/js/Controllers/Payment.js"></script>*@
+    <script src="~/assets/client/js/Controllers/userController.js"></script>
     <script>
-        var name = $('#txtName').text();
-        var mobile = $('#txtMobile').text();
-        var address = $('#txtAddress').text();
-        var email = $('#txtEmail').text();
 
-        var model = { name: name, phone: mobile, address: address, email: email }
+        //Bắt đầu Check tình trạng cập thông tin giao hàng xem khách hàng đã điền đầy đủ thông tin hay chưa
+        $("#save").attr("disabled", "true")
+
+        $("#shipName").change(function () {
+            if ($("#shipName").val() != "" && $("#Phone").val() != "" && $("#Address").val() != "" && $("#ddlPrecinctID").val() != null && $("#ddlDistrict").val() != null && $("#ddlProvince").val() != "" && $("#Email").val() != "") {
+                $("#save").removeAttr("disabled")
+            }
+            else {
+                $("#save").attr("disabled", "true")
+            }
+        });
+
+        $("#Phone").change(function () {
+            if ($("#shipName").val() != "" && $("#Phone").val() != "" && $("#Address").val() != "" && $("#ddlPrecinctID").val() != null && $("#ddlDistrict").val() != null && $("#ddlProvince").val() != "" && $("#Email").val() != "") {
+                $("#save").removeAttr("disabled")
+            }
+        });
+
+        $("#Email").change(function () {
+            if ($("#shipName").val() != "" && $("#Phone").val() != "" && $("#Address").val() != "" && $("#ddlPrecinctID").val() != null && $("#ddlDistrict").val() != null && $("#ddlProvince").val() != "" && $("#Email").val() != "") {
+                $("#save").removeAttr("disabled")
+            }
+            else {
+                $("#save").attr("disabled", "true")
+            }
+        });
+
+
+        $("#Address").change(function () {
+            if ($("#shipName").val() != "" && $("#Phone").val() != "" && $("#Address").val() != "" && $("#ddlPrecinctID").val() != null && $("#ddlDistrict").val() != null && $("#ddlProvince").val() != "" && $("#Email").val() != "") {
+                $("#save").removeAttr("disabled")
+            }
+
+            else {
+                $("#save").attr("disabled", "true")
+            }
+        });
+
+        $("#ddlPrecinctID").change(function () {
+            if ($("#shipName").val() != "" && $("#Phone").val() != "" && $("#Address").val() != "" && $("#ddlPrecinctID").val() != null && $("#ddlDistrict").val() != null && $("#ddlProvince").val() != "" && $("#Email").val() != "") {
+                $("#save").removeAttr("disabled")
+            }
+            else {
+                $("#save").attr("disabled", "true")
+            }
+        });
+
+        $("#ddlDistrict").change(function () {
+            if ($("#shipName").val() != "" && $("#Phone").val() != "" && $("#Address").val() != "" && $("#ddlPrecinctID").val() != null && $("#ddlDistrict").val() != null && $("#ddlProvince").val() != "" && $("#Email").val() != "") {
+                $("#save").removeAttr("disabled")
+            }
+            else {
+                $("#save").attr("disabled", "true")
+            }
+        });
+
+        $("#ddlProvince").change(function () {
+            if ($("#shipName").val() != "" && $("#Phone").val() != "" && $("#Address").val() != "" && $("#ddlPrecinctID").val() != null && $("#ddlDistrict").val() != null && $("#ddlProvince").val() != "" && $("#Email").val() != "") {
+                $("#save").removeAttr("disabled")
+            }
+            else {
+                $("#save").attr("disabled", "true")
+            }
+        });
+        //Kết thúc
+
+
+
+
+
+        $("#save").click(function () {
+            $('#txtName').text($("#shipName").val())
+            $("#txtMobile").text($("#Phone").val())
+            $('#txtAddress').text($("#Address").val() + ", " + $("#ddlPrecinctID").val() + ", " + $("#ddlDistrict").val() + ", " + $("#ddlProvince").val())
+            $('#txtEmail').text($("#Email").val())
+            var name = $('#txtName').text();
+            var mobile = $('#txtMobile').text();
+            var address = $('#txtAddress').text();
+            var detailAdress = address.split(",");
+            var email = $('#txtEmail').text();
+            var model = { shipName: name, Phone: mobile, Address: detailAdress[0], DistrictID: detailAdress[1], PrecinctID: detailAdress[2], ProvinceID: detailAdress[3], Email: email }
+
+            $.ajax({
+                url: "https://localhost:44370/Cart/PaymentWithAccount",
+                type: 'POST',
+                data: JSON.stringify(model),
+                contentType: "application/json; charset=utf-8",
+                dataType: "jsonp",
+            });
+        });
+
+
+        //Khi người dùng chọn hình thức thanh toán thì mới có thể click vào thanh toán
+        if (($("#paypal").checked || $("#momo").checked || $("#delivety").checked) == false) {
+            $("#payment").setAttribute("disabled", "true")
+        }
 
         //lay guild của trang web hiện tại
         var abc = window.location.href;
@@ -211,6 +373,8 @@
 
 
         $("#paypal").click(function () {
+
+
             var li = document.createElement("li");
             var List = document.getElementById("myList");
             List.replaceChild(li, List.childNodes[5]);
@@ -224,14 +388,6 @@
             a.setAttribute("style", "margin-top:10px");
             a.appendChild(textnode);
             temp.appendChild(a);
-
-
-            $.ajax({
-                url: "https://" + linktemp1[1] + "/Payment/PaymentWitPaypal",
-                type: 'POST',
-                data: model,
-                dataType: "jsonp",
-            });
         });
 
         $("#momo").click(function () {
@@ -274,6 +430,7 @@
         });
     </script>
 }
+
 <style>
     hr {
         border: 1px solid
