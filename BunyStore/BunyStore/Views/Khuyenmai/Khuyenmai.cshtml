@@ -9,7 +9,7 @@
         <!--blog area start-->
         <div class="blog_page_section">
             <div class="row">
-                <div class="col-lg-9 col-md-12">
+                <div class="col-lg-12 col-md-12">
                     <div class="blog_wrapper mb-60">
                         <div class="blog_header">
                             <h1>Tin tức khuyến mãi</h1>
@@ -21,21 +21,21 @@
 
                                     <figure>
 
-                                        <div class="blog_thumb">
+                                        <div class="blog_thumb" style="width:30%">
                                             <a href="@Url.Action("ChitietKM", "Khuyenmai", new { meta = item.MetaTitle })"><img src="/assets/home/img/discount/@item.Image" alt=""></a>
                                         </div>
                                         <figcaption class="blog_content">
                                             <h4 class="post_title"><a href="blog-details.html">@item.Name</a></h4>
                                             <div class="blog_meta">
-                                                <span class="author">Posted by : <a href="#">Admin</a> / </span>
-                                                <span class="meta_date">Posted on :  <a href="#">@item.CreatedDate</a></span>
+                                                <span class="author">Đăng bởi : Admin / </span>
+                                                <span class="meta_date">Đăng ngày :  @item.CreatedDate</span>
                                             </div>
                                             <div class="blog_desc">
                                                 <p>@item.Description</p>
                                             </div>
-                                            <footer class="btn_more">
+                                            @*<footer class="btn_more">
                                                 <a href="@Url.Action("ChitietKM", "Home", new { meta = item.MetaTitle })"> Read more</a>
-                                            </footer>
+                                            </footer>*@
                                         </figcaption>
                                     </figure>
                                 </article>
@@ -43,7 +43,7 @@
                             </div>
                     </div>
                     <!--blog pagination area start-->
-                    <div class="blog_pagination">
+                    @*<div class="blog_pagination">
                         <div class="pagination">
                             <ul>
                                 <li class="current">1</li>
@@ -53,10 +53,10 @@
                                 <li><a href="#">>></a></li>
                             </ul>
                         </div>
-                    </div>
+                    </div>*@
                     <!--blog pagination area end-->
                 </div>
-                <div class="col-lg-3 col-md-12">
+                @*<div class="col-lg-3 col-md-12">
                     <div class="blog_sidebar_widget">
                         <div class="widget_list widget_search">
                             <div class="widget_title">
@@ -175,7 +175,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>*@
             </div>
         </div>
         <!--blog area end-->

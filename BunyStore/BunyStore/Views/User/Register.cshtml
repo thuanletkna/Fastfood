@@ -19,7 +19,7 @@
                 <div class="col-lg-3 col-md-6"></div>
                 <div class=" col-lg-6 colm_none " >
                     <div class="account_form register">
-                        <h2>Register</h2>
+                        <h2>Đăng ký</h2>
                         @using (Html.BeginForm("Register", "User", FormMethod.Post))
                         {
 
@@ -44,7 +44,7 @@
                                         <div>
                                             @Html.LabelFor(model => model.UserName, new
                                        {
-                                           @class = "control-label col-md-2"
+                                           @class = "control-label"
                                        })
                                             <div>
                                                 @Html.TextBoxFor(model => model.UserName, new
@@ -59,7 +59,7 @@
                                             @Html.LabelFor(model => model.Password, new
                                        {
                                            @class =
-                "control-label col-md-2"
+                "control-label"
                                        })
                                             <div>
                                                 @Html.PasswordFor(model => model.Password, new
@@ -73,7 +73,7 @@
                                         <div>
                                             @Html.LabelFor(model => model.ConfirmPassword, new
                                        {
-                                           @class = "control-label col-md-2"
+                                           @class = "control-label"
                                        })
                                             <div>
                                                 @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control" })
@@ -81,7 +81,7 @@
                                             </div>
                                         </div>
                                         <div>
-                                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })
                                             <div>
                                                 @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
                                                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
@@ -90,21 +90,21 @@
 
                                     </div>
                                     <div>
-                                        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label" })
                                         <div>
                                             @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
                                             @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                     <div>
-                                        @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label" })
                                         <div>
                                             @Html.TextBoxFor(model => model.Phone, new { @class = "form-control" })
                                             @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                     <div>
-                                        @Html.LabelFor(model => model.ProvinceID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        @Html.LabelFor(model => model.ProvinceID, htmlAttributes: new { @class = "control-label" })
                                         <div>
                                             @Html.DropDownList("ProvinceID", new SelectList(new string[] { }), new { @class = "form-control", @id = "ddlProvince" })
                                             @Html.ValidationMessageFor(model => model.ProvinceID, "", new { @class = "text-danger" })
@@ -112,28 +112,29 @@
                                     </div>
 
                                     <div>
-                                        @Html.LabelFor(model => model.DistrictID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        @Html.LabelFor(model => model.DistrictID, htmlAttributes: new { @class = "control-label" })
                                         <div>
                                             @Html.DropDownList("DistrictID", new SelectList(new string[] { }), new { @class = "form-control", @id = "ddlDistrict" })
                                             @Html.ValidationMessageFor(model => model.DistrictID, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                     <div>
-                                        @Html.LabelFor(model => model.PrecinctID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        @Html.LabelFor(model => model.PrecinctID, htmlAttributes: new { @class = "control-label" })
                                         <div>
                                             @Html.DropDownList("PrecinctID", new SelectList(new string[] { }), new { @class = "form-control", @id = "ddlPrecinctID" })
                                             @Html.ValidationMessageFor(model => model.PrecinctID, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                     <div>
-                                        @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label" })
                                         <div>
                                             @Html.TextAreaFor(model => model.Address, new { @class = "form-control" })
                                             @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
+                                    <br />
                                     <div class="login_submit">
-                                        <button type="submit">Register</button>
+                                        <button type="submit">Đăng ký</button>
                                     </div>
                                 </form>
                             </div>
