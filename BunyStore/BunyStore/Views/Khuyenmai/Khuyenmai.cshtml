@@ -34,7 +34,7 @@
                                                 <p>@item.Description</p>
                                             </div>
                                             <footer class="btn_more">
-                                                <a href="@Url.Action("ChitietKM", "Home", new { meta = item.MetaTitle })"> Read more</a>
+                                                <a href="@Url.Action("ChitietKM", "Home", new { meta = item.MetaTitle })"> Xem thêm</a>
                                             </footer>
                                         </figcaption>
                                     </figure>
@@ -60,14 +60,14 @@
                     <div class="blog_sidebar_widget">
                         <div class="widget_list widget_search">
                             <div class="widget_title">
-                                <h3>Search</h3>
+                                <h3>Tìm kiếm</h3>
                             </div>
                             <form action="#">
-                                <input placeholder="Search..." type="text">
-                                <button type="submit">search</button>
+                                <input placeholder="Tìm..." type="text">
+                                <button type="submit">Tìm</button>
                             </form>
                         </div>
-                        <div class="widget_list comments">
+                        @*<div class="widget_list comments">
                             <div class="widget_title">
                                 <h3>Recent Comments</h3>
                             </div>
@@ -148,8 +148,8 @@
                                     <span>March 16, 2018 </span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="widget_list widget_categories">
+                        </div>*@
+                        @*<div class="widget_list widget_categories">
                             <div class="widget_title">
                                 <h3>Categories</h3>
                             </div>
@@ -161,16 +161,16 @@
                                 <li><a href="#">Other</a></li>
                                 <li><a href="#">Travel</a></li>
                             </ul>
-                        </div>
+                        </div>*@
                         <div class="widget_list widget_tag">
                             <div class="widget_title">
-                                <h3>Tag products</h3>
+                                <h3>Thẻ Tag</h3>
                             </div>
                             <div class="tag_widget">
                                 <ul>
-                                    <li><a href="#">asian</a></li>
-                                    <li><a href="#">brown</a></li>
-                                    <li><a href="#">euro</a></li>
+                                    <li><a href="#">Gà rán</a></li>
+                                    <li><a href="#">Đùi gà</a></li>
+                                    <li><a href="#">Buger</a></li>
                                 </ul>
                             </div>
                         </div>
