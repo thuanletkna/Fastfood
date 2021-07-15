@@ -317,7 +317,7 @@ namespace BunyStore.Controllers
             var verifyUrl = "/User/ResetPassword/" + activationCode;
             var link = Request.Url.AbsoluteUri.Replace(Request.Url.PathAndQuery, verifyUrl);
 
-            var fromEmail = new MailAddress("phucgak2265@gmail.com", "Thay đổi mật khẩu");
+            var fromEmail = new MailAddress("247thucannhanh@gmail.com", "Thay đổi mật khẩu");
             var toEmail = new MailAddress(emailID);
             var fromEmailPassword = "2506271099a"; // Replace with actual password
             string subject = "Reset Password";
